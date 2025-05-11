@@ -1,0 +1,121 @@
+{
+    "headers": {
+        "aboutUs": "về chúng tôi",
+        "test": "BÀI THI",
+        "review": "ôn tập",
+        "blog": "bài viết",
+        "buttons": {
+            "login": "Đăng nhập",
+            "register": "Đăng Ký"
+        },
+        "popover": {
+            "profile": "Hồ sơ cá nhân",
+            "manage": "Quản lý",
+            "logout": "Đăng xuất"
+        }
+    },
+    "navbar": {
+        "user": "Quản lý người dùng",
+        "exam": "Quản lý bài kiểm tra",
+        "blog": "Quản lý blog",
+        "chart": "Thống kê"
+    },
+    "noData": "Không có dữ liệu",
+    "home": {
+        "banner": {
+            "title": "Giới Thiệu TOEIC Online Test",
+            "subTitle": "Nền tảng luyện thi TOEIC hàng đầu giúp bạn cải thiện kỹ năng tiếng Anh và đạt điểm cao trong kỳ thi TOEIC một cách hiệu quả.",
+            "button": "Bắt đầu ngay"
+        },
+        "about": {
+            "title": "Về Chúng Tôi",
+            "subTitle": "TOEIC Online Test là nền tảng học tập trực tuyến chuyên biệt giúp người học cải thiện kỹ năng tiếng Anh và chuẩn bị tốt nhất cho kỳ thi TOEIC. Với đội ngũ giáo viên giàu kinh nghiệm cùng hệ thống bài tập đa dạng, chúng tôi cam kết mang đến trải nghiệm học tập hiệu quả nhất.",
+            "items": [
+                {
+                    "title": "Sứ Mệnh",
+                    "subTitle": "Cung cấp nền tảng học tập tiếng Anh chất lượng cao, giúp người học tự tin chinh phục kỳ thi TOEIC và sử dụng tiếng Anh hiệu quả trong môi trường học tập và làm việc."
+                },
+                {
+                    "title": "Tầm Nhìn",
+                    "subTitle": "Trở thành nền tảng học tập trực tuyến hàng đầu Việt Nam về luyện thi TOEIC, nơi mọi người học có thể tiếp cận các tài nguyên học tập chất lượng cao với chi phí hợp lý."
+                },
+                {
+                    "title": "Giá Trị Cốt Lõi",
+                    "subTitle": "Chất lượng, Đổi mới, Trách nhiệm và Cam kết mang đến trải nghiệm học tập tốt nhất cho người học trên hành trình chinh phục tiếng Anh."
+                }
+            ]
+        },
+        "whyChoose": {
+            "title": "Tại Sao Chọn TOEIC Online Test?",
+            "items": [
+                {
+                    "title": "Đề Thi Thực Tế",
+                    "subTitle": "Ngân hàng đề thi phong phú được biên soạn bám sát cấu trúc đề thi TOEIC thực tế, giúp người học làm quen với format đề thi chính thức."
+                },
+                {
+                    "title": "Phân Tích Chi Tiết",
+                    "subTitle": "Hệ thống phân tích kết quả chi tiết giúp người học nhận diện điểm mạnh, điểm yếu và có kế hoạch học tập phù hợp."
+                },
+                {
+                    "title": "Lộ Trình Cá Nhân Hóa",
+                    "subTitle": "Áp dụng công nghệ AI để tạo lộ trình học tập riêng biệt cho từng người học dựa trên trình độ và mục tiêu cá nhân."
+                },
+                {
+                    "title": "Học Mọi Lúc Mọi Nơi",
+                    "subTitle": "Nền tảng tương thích đa thiết bị, giúp người học có thể truy cập và học tập mọi lúc, mọi nơi một cách linh hoạt."
+                }
+            ]
+        },
+        "feature": {
+            "title": "Tính Năng Nổi Bật",
+            "subTitle": "TOEIC Online Test cung cấp đầy đủ các tính năng cần thiết để hỗ trợ việc học tập và luyện thi TOEIC hiệu quả",
+            "items": [
+                {
+                    "title": "Bài Thi Thử",
+                    "subTitle": "Ngân hàng đề thi thử đa dạng với hàng trăm đề thi được thiết kế theo format chuẩn của kỳ thi TOEIC quốc tế.",
+                    "lists": [
+                        "Đề thi Full Test 7 phần",
+                        "Đề thi theo từng phần",
+                        "Đề thi mini với thời gian linh hoạt"
+                    ]
+                },
+                {
+                    "title": "Học Liệu Đa Dạng",
+                    "subTitle": "Tài liệu học tập phong phú với nhiều dạng bài tập và kiến thức ngữ pháp, từ vựng cần thiết cho kỳ thi TOEIC.",
+                    "lists": [
+                        "Bài học ngữ pháp trọng tâm",
+                        "Từ vựng theo chủ đề",
+                        "Bài tập luyện nghe và đọc"
+                    ]
+                },
+                {
+                    "title": "Báo Cáo & Phân Tích",
+                    "subTitle": "Hệ thống theo dõi và phân tích tiến độ học tập chi tiết, giúp người học nắm bắt điểm mạnh, điểm yếu của bản thân.",
+                    "lists": [
+                        "Thống kê điểm số theo thời gian",
+                        "Phân tích độ chính xác theo từng phần",
+                        "Gợi ý học tập cá nhân hóa"
+                    ]
+                }
+            ]
+        },
+        "number": {
+            "title": "Con Số Ấn Tượng",
+            "items": [
+                "Học viên",
+                "Đề thi & bài tập",
+                "Tỷ lệ hài lòng",
+                "Hỗ trợ trực tuyến"
+            ]
+        }
+    },
+    "userManage": {
+        "title": "Quản lý người dùng"
+    },
+    "examManage": {
+        "title": "Quản lý bài kiểm tra"
+    },
+    "blogManage": {
+        "title": "Quản lý bài viết"
+    }
+}

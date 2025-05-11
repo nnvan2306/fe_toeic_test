@@ -1,0 +1,304 @@
+{
+    "headers": {
+        "aboutUs": "about us",
+        "test": "EXAM",
+        "review": "review",
+        "blog": "blog",
+        "buttons": {
+            "login": "Login",
+            "register": "Register"
+        },
+        "popover": {
+            "profile": "Profile",
+            "manage": "Manage",
+            "logout": "Logout"
+        }
+    },
+    "navbar": {
+        "user": "User Manage",
+        "exam": "Exam Manage",
+        "blog": "Blog Manage",
+        "chart": "Statistical"
+    },
+    "noData": "No data found",
+    "home": {
+        "banner": {
+            "title": "Introducing TOEIC Online Test",
+            "subTitle": "The leading TOEIC test preparation platform helps you improve your English skills and achieve high scores in the TOEIC test effectively.",
+            "button": "Get started now"
+        },
+        "about": {
+            "title": "About Us",
+            "subTitle": "TOEIC Online Test is a specialized online learning platform that helps learners improve their English skills and best prepare for the TOEIC exam. With a team of experienced teachers and a diverse system of exercises, we are committed to providing the most effective learning experience.",
+            "items": [
+                {
+                    "title": "Mission",
+                    "subTitle": "Providing a high-quality English learning platform, helping learners confidently conquer the TOEIC exam and use English effectively in learning and working environments."
+                },
+                {
+                    "title": "Vision",
+                    "subTitle": "To become Vietnam's leading online learning platform for TOEIC test preparation, where all learners can access high-quality learning resources at reasonable costs."
+                },
+                {
+                    "title": "Core Values",
+                    "subTitle": "Quality, Innovation, Responsibility and Commitment to bring the best learning experience to learners on their journey to conquer English."
+                }
+            ]
+        },
+        "whyChoose": {
+            "title": "Why Choose TOEIC Online Test?",
+            "items": [
+                {
+                    "title": "Real Exam Questions",
+                    "subTitle": "The rich test bank is compiled closely following the actual TOEIC test structure, helping learners get familiar with the official test format."
+                },
+                {
+                    "title": "Detailed Analysis",
+                    "subTitle": "The detailed results analysis system helps learners identify strengths and weaknesses and have a suitable study plan."
+                },
+                {
+                    "title": "Personalization Roadmap",
+                    "subTitle": "Apply AI technology to create a separate learning path for each learner based on their level and personal goals."
+                },
+                {
+                    "title": "Learn Anytime Anywhere",
+                    "subTitle": "Multi-device compatible platform, allowing learners to access and study flexibly anytime, anywhere."
+                }
+            ]
+        },
+        "feature": {
+            "title": "Outstanding Features",
+            "subTitle": "TOEIC Online Test provides all the necessary features to support effective TOEIC learning and test preparation.",
+            "items": [
+                {
+                    "title": "Practice Test",
+                    "subTitle": "Diverse test bank with hundreds of test questions designed according to the standard format of the international TOEIC exam.",
+                    "lists": [
+                        "Full Test 7 parts",
+                        "Test by section",
+                        "Mini test with flexible time"
+                    ]
+                },
+                {
+                    "title": "Diverse Learning Materials",
+                    "subTitle": "Rich learning materials with many types of exercises and necessary grammar and vocabulary knowledge for the TOEIC exam.",
+                    "lists": [
+                        "Key grammar lessons",
+                        "Vocabulary by topic",
+                        "Listening and reading exercises"
+                    ]
+                },
+                {
+                    "title": "Reporting & Analysis",
+                    "subTitle": "The system tracks and analyzes detailed learning progress, helping learners grasp their strengths and weaknesses.",
+                    "lists": [
+                        "Score statistics over time",
+                        "Partial Accuracy Analysis",
+                        "Personalized learning suggestions"
+                    ]
+                }
+            ]
+        },
+        "number": {
+            "title": "Impressive Numbers",
+            "items": [
+                "Students",
+                "Exam & Exercises",
+                "Satisfaction rate",
+                "Online support"
+            ]
+        }
+    },
+    "learn": {
+        "title": "Learn English",
+        "tabs": {
+            "grammar": {
+                "title": "Grammar",
+                "items": [
+                    {
+                        "label": "Present Simple",
+                        "howToUse": "Used for habits, routines, facts, and general truths",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Use base form for I/you/we/they (e.g., I play)",
+                                "Add -s/-es for he/she/it (e.g., He plays)",
+                                "Negative: subject + don't/doesn't + base form",
+                                "Question: Do/Does + subject + base form?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Present Continuous",
+                        "howToUse": "Used for actions happening now or around now",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + am/is/are + verb-ing",
+                                "Negative: subject + am/is/are + not + verb-ing",
+                                "Question: Am/Is/Are + subject + verb-ing?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Present Perfect",
+                        "howToUse": "Used for past actions with a connection to the present",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + have/has + past participle",
+                                "Negative: subject + have/has + not + past participle",
+                                "Question: Have/Has + subject + past participle?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Present Perfect Continuous",
+                        "howToUse": "Used for ongoing actions that started in the past and continue to the present",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + have/has + been + verb-ing",
+                                "Negative: subject + have/has + not + been + verb-ing",
+                                "Question: Have/Has + subject + been + verb-ing?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Past Simple",
+                        "howToUse": "Used for completed actions in the past",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Regular verbs: add -ed (e.g., played)",
+                                "Irregular verbs: use past form (e.g., went, saw)",
+                                "Negative: subject + didn't + base form",
+                                "Question: Did + subject + base form?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Past Continuous",
+                        "howToUse": "Used for actions that were in progress at a specific time in the past",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + was/were + verb-ing",
+                                "Negative: subject + was/were + not + verb-ing",
+                                "Question: Was/Were + subject + verb-ing?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Past Perfect",
+                        "howToUse": "Used for actions completed before another action in the past",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + had + past participle",
+                                "Negative: subject + had + not + past participle",
+                                "Question: Had + subject + past participle?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Past Perfect Continuous",
+                        "howToUse": "Used for ongoing actions that were happening before another action in the past",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + had been + verb-ing",
+                                "Negative: subject + had + not + been + verb-ing",
+                                "Question: Had + subject + been + verb-ing?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Future Simple",
+                        "howToUse": "Used for future actions, predictions, promises, and spontaneous decisions",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + will + base form",
+                                "Negative: subject + will + not + base form",
+                                "Question: Will + subject + base form?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Future Continuous",
+                        "howToUse": "Used for actions that will be in progress at a specific time in the future",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + will + be + verb-ing",
+                                "Negative: subject + will + not + be + verb-ing",
+                                "Question: Will + subject + be + verb-ing?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Future Perfect",
+                        "howToUse": "Used for actions that will be completed before another action in the future",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + will + have + past participle",
+                                "Negative: subject + will + not + have + past participle",
+                                "Question: Will + subject + have + past participle?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    },
+                    {
+                        "label": "Future Perfect Continuous",
+                        "howToUse": "Used for ongoing actions that will continue up until a point in the future",
+                        "rules": {
+                            "label": "Rules",
+                            "items": [
+                                "Form: subject + will + have + been + verb-ing",
+                                "Negative: subject + will + not + have + been + verb-ing",
+                                "Question: Will + subject + have + been + verb-ing?"
+                            ]
+                        },
+                        "examples": "Examples",
+                        "timeSignals": "Time Signals:"
+                    }
+                ]
+            },
+            "vocabulary": {
+                "title": "Vocabulary"
+            }
+        }
+    },
+    "userManage": {
+        "title": "User Manage"
+    },
+    "examManage": {
+        "title": "Exam Manage"
+    },
+    "blogManage": {
+        "title": "Blog Manage"
+    }
+}
