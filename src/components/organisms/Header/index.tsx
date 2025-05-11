@@ -1,24 +1,26 @@
 import {
-    Flex,
-    Text,
-    Button,
-    HStack,
-    useColorModeValue,
-    Popover,
-    PopoverTrigger,
     Avatar,
     Box,
-    PopoverContent,
-    PopoverBody,
-    VStack,
+    Button,
     Divider,
+    Flex,
+    HStack,
     Icon,
+    Popover,
+    PopoverBody,
+    PopoverContent,
+    PopoverTrigger,
+    Text,
+    useColorModeValue,
+    VStack,
 } from "@chakra-ui/react";
-import { useTranslation } from "react-i18next";
-import { useLocation, useNavigate } from "react-router-dom";
-import { routesMap } from "../../../routes/routes";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { FiChevronDown, FiLogOut, FiUser } from "react-icons/fi";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { routesMap } from "../../../routes/routes";
+import { logout } from "../../../store/features/user/userSlice";
 
 const Header = () => {
     const bgColor = useColorModeValue("white", "gray.800");
@@ -40,6 +42,10 @@ const Header = () => {
     const popoverBg = useColorModeValue("white", "gray.800");
     const borderColor = useColorModeValue("gray.200", "gray.700");
     const itemHoverBg = useColorModeValue("gray.100", "gray.700");
+    const user = useAppSelector((state) => state.user);
+
+    const dispatch = useAppDispatch();
+
     return (
         <Flex
             as="header"
@@ -135,137 +141,138 @@ const Header = () => {
             </HStack>
 
             <HStack spacing={3}>
-                <Button
-                    bg={greenColor}
-                    w={120}
-                    color="white"
-                    borderRadius="md"
-                    _hover={{ bg: "#236B40" }}
-                    fontWeight="bold"
-                    onClick={() => navigate(routesMap.Regsiter)}
-                >
-                    {t("headers.buttons.login")}
-                </Button>
-                <Button
-                    variant="outline"
-                    w={120}
-                    borderColor={greenColor}
-                    color={greenColor}
-                    borderRadius="md"
-                    _hover={{ bg: "green.50" }}
-                    fontWeight="bold"
-                    onClick={() => navigate(routesMap.Login)}
-                >
-                    {t("headers.buttons.register")}
-                </Button>
-                <Popover placement="bottom-end">
-                    <PopoverTrigger>
+                {
+                    !user ? <>
                         <Button
-                            rightIcon={<FiChevronDown />}
-                            variant="ghost"
-                            py={2}
-                            px={4}
-                            bg={buttonBg}
-                            _hover={{ bg: buttonHoverBg }}
+                            bg={greenColor}
+                            w={120}
+                            color="white"
                             borderRadius="md"
-                            borderWidth="1px"
-                            borderColor={borderColor}
+                            _hover={{ bg: "#236B40" }}
+                            fontWeight="bold"
+                            onClick={() => navigate(routesMap.Login)}
                         >
-                            <HStack spacing={3}>
-                                <Avatar
-                                    size="sm"
-                                    // name={username}
-                                    // src={avatarUrl}
-                                />
-                                <Box display={{ base: "none", md: "block" }}>
-                                    <Text
-                                        fontWeight="medium"
-                                        fontSize="sm"
-                                        textAlign="left"
-                                    >
-                                        Van{" "}
-                                    </Text>
-                                </Box>
-                            </HStack>
+                            {t("headers.buttons.login")}
                         </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                        width="240px"
-                        bg={popoverBg}
-                        borderColor={borderColor}
-                        borderRadius="md"
-                        boxShadow="lg"
-                    >
-                        <PopoverBody p={0}>
-                            <VStack align="stretch" spacing={0}>
-                                {/* User Info */}
-                                <Box px={4} py={3}>
+                        <Button
+                            variant="outline"
+                            w={120}
+                            borderColor={greenColor}
+                            color={greenColor}
+                            borderRadius="md"
+                            _hover={{ bg: "green.50" }}
+                            fontWeight="bold"
+                            onClick={() => navigate(routesMap.Regsiter)}
+                        >
+                            {t("headers.buttons.register")}
+                        </Button></> : ""
+                }
+                {
+                    user ? <>
+                        <Popover placement="bottom-end">
+                            <PopoverTrigger>
+                                <Button
+                                    rightIcon={<FiChevronDown />}
+                                    variant="ghost"
+                                    py={2}
+                                    px={4}
+                                    bg={buttonBg}
+                                    _hover={{ bg: buttonHoverBg }}
+                                    borderRadius="md"
+                                    borderWidth="1px"
+                                    borderColor={borderColor}
+                                >
                                     <HStack spacing={3}>
                                         <Avatar
-                                            size="md"
-                                            name={"van"}
-                                            src={""}
+                                            size="sm"
                                         />
-                                        <Box>
-                                            <Text fontWeight="medium">
-                                                {"Van"}
-                                            </Text>
+                                        <Box display={{ base: "none", md: "block" }}>
                                             <Text
+                                                fontWeight="medium"
                                                 fontSize="sm"
-                                                color="gray.500"
+                                                textAlign="left"
                                             >
-                                                @
+                                                {user.username}
                                             </Text>
                                         </Box>
                                     </HStack>
-                                </Box>
-                                <Divider />
-                                <Button
-                                    variant="ghost"
-                                    justifyContent="flex-start"
-                                    leftIcon={<Icon as={FiUser} boxSize={4} />}
-                                    py={3}
-                                    borderRadius={0}
-                                    _hover={{ bg: itemHoverBg }}
-                                    onClick={() => navigate(routesMap.Profile)}
-                                >
-                                    {t("headers.popover.profile")}
                                 </Button>
-                                <Button
-                                    variant="ghost"
-                                    justifyContent="flex-start"
-                                    leftIcon={<Icon as={FiUser} boxSize={4} />}
-                                    py={3}
-                                    borderRadius={0}
-                                    _hover={{ bg: itemHoverBg }}
-                                    onClick={() =>
-                                        navigate(routesMap.UserManager)
-                                    }
-                                >
-                                    {t("headers.popover.manage")}
-                                </Button>
-                                <Button
-                                    variant="ghost"
-                                    justifyContent="flex-start"
-                                    leftIcon={
-                                        <Icon
-                                            as={FiLogOut}
-                                            boxSize={4}
+                            </PopoverTrigger>
+
+                            <PopoverContent
+                                width="240px"
+                                bg={popoverBg}
+                                borderColor={borderColor}
+                                borderRadius="md"
+                                boxShadow="lg"
+                            >
+                                <PopoverBody p={0}>
+                                    <VStack align="stretch" spacing={0}>
+                                        <Box px={4} py={3}>
+                                            <HStack spacing={3}>
+                                                <Avatar
+                                                    size="md"
+                                                    name={"van"}
+                                                    src={""}
+                                                />
+                                                <Box>
+                                                    <Text fontWeight="medium" fontSize={"10px"}>
+                                                        {user.email}
+                                                    </Text>
+                                                </Box>
+                                            </HStack>
+                                        </Box>
+                                        <Divider />
+                                        <Button
+                                            variant="ghost"
+                                            justifyContent="flex-start"
+                                            leftIcon={<Icon as={FiUser} boxSize={4} />}
+                                            py={3}
+                                            borderRadius={0}
+                                            _hover={{ bg: itemHoverBg }}
+                                            onClick={() => navigate(routesMap.Profile)}
+                                        >
+                                            {t("headers.popover.profile")}
+                                        </Button>
+                                        {user.role === "admin" ? <Button
+                                            variant="ghost"
+                                            justifyContent="flex-start"
+                                            leftIcon={<Icon as={FiUser} boxSize={4} />}
+                                            py={3}
+                                            borderRadius={0}
+                                            _hover={{ bg: itemHoverBg }}
+                                            onClick={() =>
+                                                navigate(routesMap.UserManager)
+                                            }
+                                        >
+                                            {t("headers.popover.manage")}
+                                        </Button> : ""}
+                                        <Button
+                                            variant="ghost"
+                                            justifyContent="flex-start"
+                                            leftIcon={
+                                                <Icon
+                                                    as={FiLogOut}
+                                                    boxSize={4}
+                                                    color="red.500"
+                                                />
+                                            }
                                             color="red.500"
-                                        />
-                                    }
-                                    color="red.500"
-                                    py={3}
-                                    borderRadius={0}
-                                    _hover={{ bg: itemHoverBg }}
-                                    onClick={() => {}}
-                                >
-                                    {t("headers.popover.logout")}
-                                </Button>
-                            </VStack>
-                        </PopoverBody>
-                    </PopoverContent>
-                </Popover>
+                                            py={3}
+                                            borderRadius={0}
+                                            _hover={{ bg: itemHoverBg }}
+                                            onClick={() => {
+                                                dispatch(logout());
+                                                navigate(routesMap.Home);
+                                            }}
+                                        >
+                                            {t("headers.popover.logout")}
+                                        </Button>
+                                    </VStack>
+                                </PopoverBody>
+                            </PopoverContent>
+                        </Popover></> : ""
+                }
                 <HStack gap={0}>
                     <Button
                         variant="outline"

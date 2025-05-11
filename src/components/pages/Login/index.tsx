@@ -1,28 +1,33 @@
-import MainTemPlate from "../../templates/MainTemPlate";
 import {
     Box,
     Button,
     Checkbox,
     Container,
+    Flex,
     FormControl,
+    FormErrorMessage,
     FormLabel,
     Heading,
     HStack,
+    Icon,
     Input,
     InputGroup,
     InputRightElement,
     Stack,
     Text,
     useColorModeValue,
-    Icon,
-    Flex,
-    FormErrorMessage,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../app/hooks";
+import toast from "../../../libs/toast";
 import { routesMap } from "../../../routes/routes";
 import { useLogin } from "../../../services/auth/login";
+import { login } from "../../../store/features/user/userSlice";
+import { IResponse } from "../../../types/interface";
+import { UserResponseType } from "../../../types/user";
+import MainTemPlate from "../../templates/MainTemPlate";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -34,11 +39,20 @@ const Login = () => {
     const [isPasswordError, setIsPasswordError] = useState(false);
 
     const handlePasswordVisibility = () => setShowPassword(!showPassword);
+    const dispatch = useAppDispatch();
 
-    const login = useLogin({
+    const loginMution = useLogin({
         mutationConfig: {
-            onSuccess() {},
-            onError() {},
+            onSuccess(data: IResponse<UserResponseType>) {
+                dispatch(login(data.data));
+                toast({
+                    status: "success",
+                    title: "Tạo tài khoản thành công",
+                });
+                setIsLoading(false);
+                navigate(routesMap.Home);
+            },
+            onError() { },
         },
     });
 
@@ -57,7 +71,7 @@ const Login = () => {
 
         if (emailValid && passwordValid) {
             setIsLoading(true);
-            login.mutate({ email: email, password: password });
+            loginMution.mutate({ email: email, password: password });
         }
     };
 

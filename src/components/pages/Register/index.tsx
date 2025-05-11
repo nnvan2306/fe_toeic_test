@@ -1,26 +1,30 @@
-import MainTemPlate from "../../templates/MainTemPlate";
 import {
     Box,
     Button,
+    Flex,
     FormControl,
     FormLabel,
     Heading,
+    HStack,
+    Icon,
     Input,
     InputGroup,
     InputRightElement,
     Stack,
     Text,
     useColorModeValue,
-    Icon,
-    Flex,
-    HStack,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../../../app/hooks";
+import toast from "../../../libs/toast";
 import { routesMap } from "../../../routes/routes";
 import { useRegister } from "../../../services/auth/register";
-import toast from "../../../libs/toast";
+import { login } from "../../../store/features/user/userSlice";
+import { IResponse } from "../../../types/interface";
+import { UserResponseType } from "../../../types/user";
+import MainTemPlate from "../../templates/MainTemPlate";
 
 const Register = () => {
     const navigate = useNavigate();
@@ -34,10 +38,12 @@ const Register = () => {
     const handlePasswordVisibility = () => setShowPassword(!showPassword);
     const handleConfirmPasswordVisibility = () =>
         setShowConfirmPassword(!showConfirmPassword);
+    const dispatch = useAppDispatch();
 
     const register = useRegister({
         mutationConfig: {
-            onSuccess() {
+            onSuccess(data: IResponse<UserResponseType>) {
+                dispatch(login(data.data));
                 toast({
                     status: "success",
                     title: "Tạo tài khoản thành công",
@@ -46,8 +52,9 @@ const Register = () => {
                 setEmail("");
                 setPassword("");
                 setConfirmPassword("");
+                navigate(routesMap.Home);
             },
-            onError() {},
+            onError() { },
         },
     });
     const handleValidate = () => {
