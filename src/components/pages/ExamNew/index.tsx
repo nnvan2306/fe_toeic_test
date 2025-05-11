@@ -10,14 +10,18 @@ import {
     Input,
     Select,
     Text,
+    Textarea,
     VStack,
 } from "@chakra-ui/react";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ManagerTemplate from "../../templates/ManagerTemplate";
 import TitleManage from "../../atoms/TitleManage";
 import icons from "../../../constants/icons";
 import { useUploadFile } from "../../../services/upload/upload";
+import { useCreateExam } from "../../../services/exam/create";
+import { useParams } from "react-router-dom";
+import { useGetExam } from "../../../services/exam/get-exam";
 
 type AnswerType = {
     uuid: string;
@@ -50,11 +54,16 @@ const defaultQuestion: QuestionType = {
 };
 
 const ExamNew = () => {
+    const { id } = useParams();
+
     const [title, setTitle] = useState("");
-    const [type, setType] = useState("toeic");
+    const [type, setType] = useState("fulltest");
+    const [description, setDescription] = useState("");
     const [idUpload, setIdUpload] = useState("");
     const [isUploadImage, setIsUploadImage] = useState(false);
     const [question, setQuestion] = useState<QuestionType[]>([]);
+
+    const { data: examData } = useGetExam({ id: Number(id) || 0 });
 
     const handleUpdateQuestion = (updated: QuestionType) => {
         setQuestion((prev) =>
@@ -80,9 +89,15 @@ const ExamNew = () => {
         },
     });
 
+    const create = useCreateExam({
+        mutationConfig: {
+            onSuccess() {},
+            onError() {},
+        },
+    });
+
     const handleUploadImage = (uuid: string, file: File) => {
         setIdUpload(uuid);
-        setIsUploadImage(true);
         const formData = new FormData();
         formData.append("file", file);
         setIdUpload(uuid);
@@ -100,7 +115,27 @@ const ExamNew = () => {
 
     const handleSubmit = () => {
         console.log({ title, type, question });
+        if (!title || !description) {
+            return;
+        }
+
+        create.mutate({
+            title,
+            type,
+            description,
+            questions: JSON.stringify(question),
+        });
     };
+
+    useEffect(() => {
+        const data = examData?.data;
+        if (data) {
+            setTitle(data?.title || "");
+            setType(data?.type || "");
+            console.log(JSON.parse(data?.questions));
+            // setQuestion(JSON.parse(data?.questions));
+        }
+    }, [examData]);
 
     return (
         <ManagerTemplate>
@@ -120,9 +155,19 @@ const ExamNew = () => {
                                 onChange={(e) => setType(e.target.value)}
                             >
                                 <option value="toeic">Toeic</option>
-                                <option value="full">Full</option>
+                                <option value="fulltest">Fulltest</option>
                             </Select>
                         </FormCommon>
+                        <GridItem colSpan={2}>
+                            <FormCommon title="Description">
+                                <Textarea
+                                    value={description}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
+                                />
+                            </FormCommon>
+                        </GridItem>
                     </Grid>
 
                     <VStack w="100%" gap={4}>
@@ -140,6 +185,7 @@ const ExamNew = () => {
                                 }
                                 onUploadImage={handleUploadImage}
                                 onUploadAudio={handleUploadAudio}
+                                setIsUploadImage={setIsUploadImage}
                             />
                         ))}
                     </VStack>
@@ -199,12 +245,14 @@ const QuestionItem = ({
     onRemove,
     onUploadImage,
     onUploadAudio,
+    setIsUploadImage,
 }: {
     item: QuestionType;
     onUpdate: (updated: QuestionType) => void;
     onRemove: () => void;
     onUploadImage: (uuid: string, file: File) => void;
     onUploadAudio: (uuid: string, file: File) => void;
+    setIsUploadImage: Dispatch<SetStateAction<boolean>>;
 }) => {
     const refInput = useRef<HTMLInputElement>(null);
 
@@ -241,6 +289,7 @@ const QuestionItem = ({
                             hidden
                             ref={refInput}
                             onChange={(e) => {
+                                setIsUploadImage(false);
                                 const file = e.target.files?.[0];
                                 if (file) onUploadImage(item.uuid, file);
                             }}

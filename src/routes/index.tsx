@@ -22,3 +22,4 @@ export const ExamManager = lazy(
     () => import("../components/pages/ExamManager")
 );
 export const ExamNew = lazy(() => import("../components/pages/ExamNew"));
+export const ExamEdit = lazy(() => import("../components/pages/ExamNew"));

@@ -5,10 +5,35 @@ import TableCommon from "../../organisms/TableCommon";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { routesMap } from "../../../routes/routes";
+import { useGetExams } from "../../../services/exam/get-exams";
+import ActionManage from "../../molecules/ActionMAnage";
+import { useMemo } from "react";
+import { ExamResponseType } from "../../../types/exam";
 
 const ExamManager = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+
+    const { data } = useGetExams({});
+    const exams = useMemo(
+        () =>
+            (data?.data || []).map((item: ExamResponseType) => ({
+                ...item,
+                action: (
+                    <ActionManage
+                        actionUpdate={() =>
+                            navigate(
+                                routesMap.ExamEdit.replace(
+                                    "/:id",
+                                    `/${item.id}`
+                                )
+                            )
+                        }
+                    />
+                ),
+            })),
+        [data]
+    );
 
     return (
         <ManagerTemplate>
@@ -21,10 +46,12 @@ const ExamManager = () => {
                 </HStack>
                 <TableCommon
                     columns={[
-                        { key: "a", label: "A" },
-                        { key: "b", label: "B" },
+                        { key: "title", label: "Title", w: "20%" },
+                        { key: "type", label: "type", w: "20%" },
+                        { key: "description", label: "description", w: "40%" },
+                        { key: "action", label: "" },
                     ]}
-                    data={[]}
+                    data={exams}
                 />
             </Box>
         </ManagerTemplate>

@@ -52,7 +52,7 @@ const Login = () => {
                 setIsLoading(false);
                 navigate(routesMap.Home);
             },
-            onError() { },
+            onError() {},
         },
     });
 
@@ -64,7 +64,7 @@ const Login = () => {
         e.preventDefault();
 
         const emailValid = validateEmail(email);
-        const passwordValid = password.length >= 6;
+        const passwordValid = password.length >= 4;
 
         setIsEmailError(!emailValid);
         setIsPasswordError(!passwordValid);

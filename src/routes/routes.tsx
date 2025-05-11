@@ -114,6 +114,12 @@ export const routes = [
         element: <ExamNew />,
         requiresAuth: true,
     },
+    {
+        name: "ExamEdit",
+        path: "/admin/exam/edit/:id",
+        element: <ExamNew />,
+        requiresAuth: true,
+    },
 ] as const;
 
 type RouteName = (typeof routes)[number]["name"];
