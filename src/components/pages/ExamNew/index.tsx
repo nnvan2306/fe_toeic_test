@@ -13,14 +13,7 @@ import {
     Textarea,
     VStack,
 } from "@chakra-ui/react";
-import {
-    Dispatch,
-    ReactNode,
-    SetStateAction,
-    useEffect,
-    useRef,
-    useState,
-} from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ManagerTemplate from "../../templates/ManagerTemplate";
 import TitleManage from "../../atoms/TitleManage";
@@ -29,6 +22,9 @@ import { useUploadFile } from "../../../services/upload/upload";
 import { useCreateExam } from "../../../services/exam/create";
 import { useParams } from "react-router-dom";
 import { useGetExam } from "../../../services/exam/get-exam";
+import { useUpdateExam } from "../../../services/exam/update";
+import toast from "../../../libs/toast";
+import { getAxiosError } from "../../../libs/axios";
 
 type AnswerType = {
     uuid: string;
@@ -67,7 +63,6 @@ const ExamNew = () => {
     const [type, setType] = useState("fulltest");
     const [description, setDescription] = useState("");
     const [idUpload, setIdUpload] = useState("");
-    const [isUploadImage, setIsUploadImage] = useState(false);
     const [question, setQuestion] = useState<QuestionType[]>([]);
 
     const { data: examData } = useGetExam({ id: Number(id) || 0 });
@@ -81,25 +76,56 @@ const ExamNew = () => {
     const uploadFile = useUploadFile({
         mutationConfig: {
             onSuccess(data) {
-                if (isUploadImage) {
-                    handleUpdateQuestion({
-                        ...question.find((q) => q.uuid === idUpload)!,
-                        image: data?.data || "",
-                    });
-                } else {
-                    handleUpdateQuestion({
-                        ...question.find((q) => q.uuid === idUpload)!,
-                        audio: data?.data || "",
-                    });
-                }
+                handleUpdateQuestion({
+                    ...question.find((q) => q.uuid === idUpload)!,
+                    image: data?.data || "",
+                });
+            },
+        },
+    });
+
+    const uploadAudio = useUploadFile({
+        mutationConfig: {
+            onSuccess(data) {
+                handleUpdateQuestion({
+                    ...question.find((q) => q.uuid === idUpload)!,
+                    audio: data?.data || "",
+                });
             },
         },
     });
 
     const create = useCreateExam({
         mutationConfig: {
-            onSuccess() {},
-            onError() {},
+            onSuccess() {
+                toast({
+                    status: "success",
+                    title: "Tạo bài kiểm tra thành công",
+                });
+            },
+            onError(error) {
+                toast({
+                    status: "error",
+                    title: getAxiosError(error),
+                });
+            },
+        },
+    });
+
+    const update = useUpdateExam({
+        mutationConfig: {
+            onSuccess() {
+                toast({
+                    status: "success",
+                    title: "Cập nhật bài kiểm tra thành công",
+                });
+            },
+            onError(error) {
+                toast({
+                    status: "error",
+                    title: getAxiosError(error),
+                });
+            },
         },
     });
 
@@ -109,7 +135,6 @@ const ExamNew = () => {
         formData.append("file", file);
         setIdUpload(uuid);
         uploadFile.mutate(formData);
-        setIsUploadImage(false);
     };
 
     const handleUploadAudio = (uuid: string, file: File) => {
@@ -117,21 +142,24 @@ const ExamNew = () => {
         const formData = new FormData();
         formData.append("file", file);
         setIdUpload(uuid);
-        uploadFile.mutate(formData);
+        uploadAudio.mutate(formData);
     };
 
     const handleSubmit = () => {
-        console.log({ title, type, question });
         if (!title || !description) {
             return;
         }
-
-        create.mutate({
+        const payload = {
             title,
             type,
             description,
             questions: question,
-        });
+        };
+        if (id) {
+            update.mutate({ id: Number(id), ...payload });
+        } else {
+            create.mutate(payload);
+        }
     };
 
     useEffect(() => {
@@ -139,9 +167,12 @@ const ExamNew = () => {
         if (data) {
             setTitle(data?.title || "");
             setType(data?.type || "");
+            setDescription(data?.description);
             setQuestion(JSON.parse(data?.questions));
         }
     }, [examData]);
+
+    console.log(question);
 
     return (
         <ManagerTemplate>
@@ -191,7 +222,6 @@ const ExamNew = () => {
                                 }
                                 onUploadImage={handleUploadImage}
                                 onUploadAudio={handleUploadAudio}
-                                setIsUploadImage={setIsUploadImage}
                             />
                         ))}
                     </VStack>
@@ -251,14 +281,12 @@ const QuestionItem = ({
     onRemove,
     onUploadImage,
     onUploadAudio,
-    setIsUploadImage,
 }: {
     item: QuestionType;
     onUpdate: (updated: QuestionType) => void;
     onRemove: () => void;
     onUploadImage: (uuid: string, file: File) => void;
     onUploadAudio: (uuid: string, file: File) => void;
-    setIsUploadImage: Dispatch<SetStateAction<boolean>>;
 }) => {
     const refInput = useRef<HTMLInputElement>(null);
 
@@ -295,7 +323,6 @@ const QuestionItem = ({
                             hidden
                             ref={refInput}
                             onChange={(e) => {
-                                setIsUploadImage(false);
                                 const file = e.target.files?.[0];
                                 if (file) onUploadImage(item.uuid, file);
                             }}

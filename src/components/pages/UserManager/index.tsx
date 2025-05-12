@@ -11,6 +11,9 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Radio,
+    RadioGroup,
+    Stack,
     Text,
     useDisclosure,
 } from "@chakra-ui/react";
@@ -155,6 +158,9 @@ const UserManager = () => {
                                         }
                                     />
                                 </FormCommon>
+                                <FormCommon title="Email">
+                                    <Input value={dataUpdate?.email} disabled />
+                                </FormCommon>
                                 <FormCommon title="Phone">
                                     <Input
                                         value={dataUpdate?.phone}
@@ -165,6 +171,22 @@ const UserManager = () => {
                                             }))
                                         }
                                     />
+                                </FormCommon>
+                                <FormCommon title="Giới tính">
+                                    <RadioGroup
+                                        onChange={(e) =>
+                                            setDataUpdate((prev) => ({
+                                                ...prev,
+                                                gender: e || "",
+                                            }))
+                                        }
+                                        value={dataUpdate?.gender}
+                                    >
+                                        <Stack direction="row">
+                                            <Radio value="male">Nam</Radio>
+                                            <Radio value="female">Nữ</Radio>
+                                        </Stack>
+                                    </RadioGroup>
                                 </FormCommon>
                             </Grid>
                         </ModalBody>
