@@ -21,6 +21,10 @@
         "chart": "Thống kê"
     },
     "noData": "Không có dữ liệu",
+    "buttons": {
+        "delete": "Xóa",
+        "update": "Cập nhật"
+    },
     "home": {
         "banner": {
             "title": "Giới Thiệu TOEIC Online Test",
@@ -117,5 +121,11 @@
     },
     "blogManage": {
         "title": "Quản lý bài viết"
+    },
+    "exam": {
+        "chart": "Thống kê học tập",
+        "completed": "Đã hoàn thành",
+        "noCompleted": "Chưa bắt đầu",
+        "button": "Bắt đầu"
     }
 }

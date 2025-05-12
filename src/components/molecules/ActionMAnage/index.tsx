@@ -1,4 +1,5 @@
 import { Button, HStack } from "@chakra-ui/react";
+import { useTranslation } from "react-i18next";
 import { FaTrash } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
 
@@ -7,6 +8,7 @@ type Props = {
     actionUpdate?: () => void;
 };
 const ActionManage = ({ actionDelete, actionUpdate }: Props) => {
+    const { t } = useTranslation();
     return (
         <HStack spacing={4} mt={4}>
             {actionDelete ? (
@@ -19,7 +21,7 @@ const ActionManage = ({ actionDelete, actionUpdate }: Props) => {
                     borderRadius="md"
                     onClick={actionDelete}
                 >
-                    Xóa
+                    {t("buttons.delete")}
                 </Button>
             ) : null}
 
@@ -34,7 +36,7 @@ const ActionManage = ({ actionDelete, actionUpdate }: Props) => {
                     boxShadow="sm"
                     onClick={actionUpdate}
                 >
-                    Cập nhật
+                    {t("buttons.update")}
                 </Button>
             ) : null}
         </HStack>

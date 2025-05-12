@@ -67,17 +67,17 @@ const TableCommon = ({
                         <Tr>
                             {columns?.length > 0
                                 ? columns.map(({ key, label, w }) => {
-                                    return (
-                                        <Th
-                                            key={key}
-                                            w={w}
-                                            py={3}
-                                            borderColor={borderColor}
-                                        >
-                                            {label}
-                                        </Th>
-                                    );
-                                })
+                                      return (
+                                          <Th
+                                              key={key}
+                                              w={w}
+                                              py={3}
+                                              borderColor={borderColor}
+                                          >
+                                              {label}
+                                          </Th>
+                                      );
+                                  })
                                 : null}
                         </Tr>
                     </Thead>
@@ -120,13 +120,36 @@ const TableCommon = ({
                                                         }
                                                     >
                                                         <Text noOfLines={5}>
-                                                            {
-                                                                get(item, itemColumn.key).toString().startsWith("http") ? <Image borderRadius={"10px"} maxHeight={"120px"} maxW={"140px"} alt="" src={get(item, itemColumn.key).toString()} />
-                                                                    : get(
+                                                            {get(
+                                                                item,
+                                                                itemColumn.key
+                                                            )
+                                                                ?.toString()
+                                                                .startsWith(
+                                                                    "http"
+                                                                ) ? (
+                                                                <Image
+                                                                    borderRadius={
+                                                                        "10px"
+                                                                    }
+                                                                    maxHeight={
+                                                                        "120px"
+                                                                    }
+                                                                    maxW={
+                                                                        "140px"
+                                                                    }
+                                                                    alt=""
+                                                                    src={get(
                                                                         item,
                                                                         itemColumn.key
-                                                                    )
-                                                            }
+                                                                    )?.toString()}
+                                                                />
+                                                            ) : (
+                                                                get(
+                                                                    item,
+                                                                    itemColumn.key
+                                                                )
+                                                            )}
                                                         </Text>
                                                     </Td>
                                                 );

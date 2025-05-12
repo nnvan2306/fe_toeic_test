@@ -13,6 +13,7 @@ import {
     Login,
     Profile,
     Register,
+    Result,
     ToDo,
     UserManager,
 } from "./index";
@@ -118,6 +119,12 @@ export const routes = [
         name: "ExamEdit",
         path: "/admin/exam/edit/:id",
         element: <ExamNew />,
+        requiresAuth: true,
+    },
+    {
+        name: "Result",
+        path: "/admin/exam/result/:id",
+        element: <Result />,
         requiresAuth: true,
     },
 ] as const;
