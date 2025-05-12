@@ -526,11 +526,7 @@ const QuestionItem = ({
                                 flexDirection="column"
                                 alignItems="center"
                                 justifyContent="center"
-                                onClick={() =>
-                                    item.audio
-                                        ? null
-                                        : refInput.current?.click()
-                                }
+                                onClick={() => refInput.current?.click()}
                                 cursor="pointer"
                                 transition="all 0.2s"
                                 _hover={{
@@ -602,11 +598,7 @@ const QuestionItem = ({
                             </HStack>
                         ) : (
                             <Button
-                                onClick={() =>
-                                    item.image
-                                        ? null
-                                        : audioRef.current?.click()
-                                }
+                                onClick={() => audioRef.current?.click()}
                                 w="100%"
                                 variant="outline"
                                 leftIcon={

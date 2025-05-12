@@ -186,182 +186,180 @@ const ExamDetail: React.FC = () => {
                             {questions?.length
                                 ? questions.map(
                                       (item: QuestionType, index: number) => {
-                                          if (item.audio) {
-                                              return (
-                                                  <Card
-                                                      key={item.uuid}
-                                                      variant="outline"
-                                                      p={4}
-                                                      w="100%"
-                                                  >
-                                                      <VStack
-                                                          align="stretch"
-                                                          spacing={3}
-                                                      >
-                                                          <Flex align="center">
-                                                              <FaHeadphones
-                                                                  size={18}
-                                                                  style={{
-                                                                      marginRight:
-                                                                          "8px",
-                                                                  }}
-                                                              />
-                                                              <Text fontWeight="bold">
-                                                                  {index + 1}.{" "}
-                                                                  {item.title}
-                                                              </Text>
-                                                          </Flex>
+                                          //   if (item.audio) {
+                                          //       return (
+                                          //           <Card
+                                          //               key={item.uuid}
+                                          //               variant="outline"
+                                          //               p={4}
+                                          //               w="100%"
+                                          //           >
+                                          //               <VStack
+                                          //                   align="stretch"
+                                          //                   spacing={3}
+                                          //               >
+                                          //                   <Flex align="center">
+                                          //                       <FaHeadphones
+                                          //                           size={18}
+                                          //                           style={{
+                                          //                               marginRight:
+                                          //                                   "8px",
+                                          //                           }}
+                                          //                       />
+                                          //                       <Text fontWeight="bold">
+                                          //                           {index + 1}.{" "}
+                                          //                           {item.title}
+                                          //                       </Text>
+                                          //                   </Flex>
 
-                                                          <Box
-                                                              bg="gray.100"
-                                                              p={3}
-                                                              borderRadius="md"
-                                                              textAlign="center"
-                                                          >
-                                                              <Button
-                                                                  leftIcon={
-                                                                      <FaHeadphones />
-                                                                  }
-                                                                  colorScheme="orange"
-                                                                  size="sm"
-                                                              >
-                                                                  Play Audio
-                                                              </Button>
-                                                              <Text
-                                                                  fontSize="sm"
-                                                                  mt={2}
-                                                                  color="gray.600"
-                                                              >
-                                                                  Click to play
-                                                                  the audio (In
-                                                                  a real app,
-                                                                  this would
-                                                                  play actual
-                                                                  audio)
-                                                              </Text>
-                                                          </Box>
+                                          //                   <Box
+                                          //                       bg="gray.100"
+                                          //                       p={3}
+                                          //                       borderRadius="md"
+                                          //                       textAlign="center"
+                                          //                   >
+                                          //                       <audio
+                                          //                           controls
+                                          //                           style={{
+                                          //                               width: "100%",
+                                          //                           }}
+                                          //                       >
+                                          //                           <source
+                                          //                               src={
+                                          //                                   item.audio
+                                          //                               }
+                                          //                               type="audio/ogg"
+                                          //                           />
+                                          //                           <source
+                                          //                               src={
+                                          //                                   item.audio
+                                          //                               }
+                                          //                               type="audio/mpeg"
+                                          //                           />
+                                          //                       </audio>
+                                          //                   </Box>
 
-                                                          <RadioGroup
-                                                              onChange={(val) =>
-                                                                  handleSelectAnswer(
-                                                                      index,
-                                                                      val
-                                                                  )
-                                                              }
-                                                              value={
-                                                                  item.answers.find(
-                                                                      (a) =>
-                                                                          a.isChoose
-                                                                  )?.uuid || ""
-                                                              }
-                                                          >
-                                                              <Stack
-                                                                  spacing={3}
-                                                              >
-                                                                  {item.answers.map(
-                                                                      (
-                                                                          option
-                                                                      ) => (
-                                                                          <Radio
-                                                                              key={
-                                                                                  option.uuid
-                                                                              }
-                                                                              value={
-                                                                                  option.uuid
-                                                                              }
-                                                                          >
-                                                                              {
-                                                                                  option.content
-                                                                              }
-                                                                          </Radio>
-                                                                      )
-                                                                  )}
-                                                              </Stack>
-                                                          </RadioGroup>
-                                                      </VStack>
-                                                  </Card>
-                                              );
-                                          }
-                                          if (item.image) {
-                                              return (
-                                                  <Card
-                                                      key={item.uuid}
-                                                      variant="outline"
-                                                      p={4}
-                                                      w="100%"
-                                                  >
-                                                      <VStack
-                                                          align="stretch"
-                                                          spacing={3}
-                                                      >
-                                                          <Flex align="center">
-                                                              <FaHeadphones
-                                                                  size={18}
-                                                                  style={{
-                                                                      marginRight:
-                                                                          "8px",
-                                                                  }}
-                                                              />
-                                                              <Text fontWeight="bold">
-                                                                  {index + 1}.{" "}
-                                                                  {item.title}
-                                                              </Text>
-                                                          </Flex>
+                                          //                   <RadioGroup
+                                          //                       onChange={(val) =>
+                                          //                           handleSelectAnswer(
+                                          //                               index,
+                                          //                               val
+                                          //                           )
+                                          //                       }
+                                          //                       value={
+                                          //                           item.answers.find(
+                                          //                               (a) =>
+                                          //                                   a.isChoose
+                                          //                           )?.uuid || ""
+                                          //                       }
+                                          //                   >
+                                          //                       <Stack
+                                          //                           spacing={3}
+                                          //                       >
+                                          //                           {item.answers.map(
+                                          //                               (
+                                          //                                   option
+                                          //                               ) => (
+                                          //                                   <Radio
+                                          //                                       key={
+                                          //                                           option.uuid
+                                          //                                       }
+                                          //                                       value={
+                                          //                                           option.uuid
+                                          //                                       }
+                                          //                                   >
+                                          //                                       {
+                                          //                                           option.content
+                                          //                                       }
+                                          //                                   </Radio>
+                                          //                               )
+                                          //                           )}
+                                          //                       </Stack>
+                                          //                   </RadioGroup>
+                                          //               </VStack>
+                                          //           </Card>
+                                          //       );
+                                          //   }
+                                          //   if (item.image) {
+                                          //       return (
+                                          //           <Card
+                                          //               key={item.uuid}
+                                          //               variant="outline"
+                                          //               p={4}
+                                          //               w="100%"
+                                          //           >
+                                          //               <VStack
+                                          //                   align="stretch"
+                                          //                   spacing={3}
+                                          //               >
+                                          //                   <Flex align="center">
+                                          //                       <FaHeadphones
+                                          //                           size={18}
+                                          //                           style={{
+                                          //                               marginRight:
+                                          //                                   "8px",
+                                          //                           }}
+                                          //                       />
+                                          //                       <Text fontWeight="bold">
+                                          //                           {index + 1}.{" "}
+                                          //                           {item.title}
+                                          //                       </Text>
+                                          //                   </Flex>
 
-                                                          <Box
-                                                              bg="gray.100"
-                                                              p={3}
-                                                              borderRadius="md"
-                                                              textAlign="center"
-                                                          >
-                                                              <Image
-                                                                  alt="image"
-                                                                  src={
-                                                                      item.image
-                                                                  }
-                                                              />
-                                                          </Box>
-                                                          <RadioGroup
-                                                              onChange={(val) =>
-                                                                  handleSelectAnswer(
-                                                                      index,
-                                                                      val
-                                                                  )
-                                                              }
-                                                              value={
-                                                                  item.answers.find(
-                                                                      (a) =>
-                                                                          a.isChoose
-                                                                  )?.uuid || ""
-                                                              }
-                                                          >
-                                                              <Stack
-                                                                  spacing={3}
-                                                              >
-                                                                  {item.answers.map(
-                                                                      (
-                                                                          option
-                                                                      ) => (
-                                                                          <Radio
-                                                                              key={
-                                                                                  option.uuid
-                                                                              }
-                                                                              value={
-                                                                                  option.uuid
-                                                                              }
-                                                                          >
-                                                                              {
-                                                                                  option.content
-                                                                              }
-                                                                          </Radio>
-                                                                      )
-                                                                  )}
-                                                              </Stack>
-                                                          </RadioGroup>
-                                                      </VStack>
-                                                  </Card>
-                                              );
-                                          }
+                                          //                   <Box
+                                          //                       bg="gray.100"
+                                          //                       p={3}
+                                          //                       borderRadius="md"
+                                          //                       textAlign="center"
+                                          //                   >
+                                          //                       <Image
+                                          //                           alt="image"
+                                          //                           src={
+                                          //                               item.image
+                                          //                           }
+                                          //                       />
+                                          //                   </Box>
+                                          //                   <RadioGroup
+                                          //                       onChange={(val) =>
+                                          //                           handleSelectAnswer(
+                                          //                               index,
+                                          //                               val
+                                          //                           )
+                                          //                       }
+                                          //                       value={
+                                          //                           item.answers.find(
+                                          //                               (a) =>
+                                          //                                   a.isChoose
+                                          //                           )?.uuid || ""
+                                          //                       }
+                                          //                   >
+                                          //                       <Stack
+                                          //                           spacing={3}
+                                          //                       >
+                                          //                           {item.answers.map(
+                                          //                               (
+                                          //                                   option
+                                          //                               ) => (
+                                          //                                   <Radio
+                                          //                                       key={
+                                          //                                           option.uuid
+                                          //                                       }
+                                          //                                       value={
+                                          //                                           option.uuid
+                                          //                                       }
+                                          //                                   >
+                                          //                                       {
+                                          //                                           option.content
+                                          //                                       }
+                                          //                                   </Radio>
+                                          //                               )
+                                          //                           )}
+                                          //                       </Stack>
+                                          //                   </RadioGroup>
+                                          //               </VStack>
+                                          //           </Card>
+                                          //       );
+                                          //   }
                                           return (
                                               <Card
                                                   key={item.uuid}
@@ -375,6 +373,47 @@ const ExamDetail: React.FC = () => {
                                                   >
                                                       {index + 1}. {item.title}
                                                   </Text>
+                                                  {item.audio ? (
+                                                      <Box
+                                                          bg="gray.100"
+                                                          p={3}
+                                                          borderRadius="md"
+                                                          textAlign="center"
+                                                      >
+                                                          <audio
+                                                              controls
+                                                              style={{
+                                                                  width: "100%",
+                                                              }}
+                                                          >
+                                                              <source
+                                                                  src={
+                                                                      item.audio
+                                                                  }
+                                                                  type="audio/ogg"
+                                                              />
+                                                              <source
+                                                                  src={
+                                                                      item.audio
+                                                                  }
+                                                                  type="audio/mpeg"
+                                                              />
+                                                          </audio>
+                                                      </Box>
+                                                  ) : null}
+                                                  {item.image ? (
+                                                      <Box
+                                                          bg="gray.100"
+                                                          p={3}
+                                                          borderRadius="md"
+                                                          textAlign="center"
+                                                      >
+                                                          <Image
+                                                              alt="image"
+                                                              src={item.image}
+                                                          />
+                                                      </Box>
+                                                  ) : null}
                                                   <RadioGroup
                                                       onChange={(val) =>
                                                           handleSelectAnswer(
