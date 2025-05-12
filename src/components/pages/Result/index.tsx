@@ -28,11 +28,14 @@ const Result = () => {
     );
     const scorePercentage = useMemo(
         () =>
-            Number(
-                (
-                    Number(score.split("/")[0]) / Number(score.split("/")[1])
-                ).toFixed(0)
-            ) * 100,
+            score
+                ? Number(
+                      (
+                          Number(score.split("/")[0]) /
+                          Number(score.split("/")[1])
+                      ).toFixed(0)
+                  ) * 100
+                : "",
         [score]
     );
 
