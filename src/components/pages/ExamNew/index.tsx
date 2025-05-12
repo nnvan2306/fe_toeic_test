@@ -13,7 +13,14 @@ import {
     Textarea,
     VStack,
 } from "@chakra-ui/react";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import {
+    Dispatch,
+    ReactNode,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 import { v4 as uuidv4 } from "uuid";
 import ManagerTemplate from "../../templates/ManagerTemplate";
 import TitleManage from "../../atoms/TitleManage";
@@ -123,7 +130,7 @@ const ExamNew = () => {
             title,
             type,
             description,
-            questions: JSON.stringify(question),
+            questions: question,
         });
     };
 
@@ -132,8 +139,7 @@ const ExamNew = () => {
         if (data) {
             setTitle(data?.title || "");
             setType(data?.type || "");
-            console.log(JSON.parse(data?.questions));
-            // setQuestion(JSON.parse(data?.questions));
+            setQuestion(JSON.parse(data?.questions));
         }
     }, [examData]);
 

@@ -6,7 +6,8 @@ type PayLoadType = {
     title: string;
     description: string;
     type: string;
-    questions: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    questions: any;
 };
 
 const create = async (payload: PayLoadType) => {

@@ -28,6 +28,7 @@ import { login } from "../../../store/features/user/userSlice";
 import { IResponse } from "../../../types/interface";
 import { UserResponseType } from "../../../types/user";
 import MainTemPlate from "../../templates/MainTemPlate";
+import { getAxiosError } from "../../../libs/axios";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -52,7 +53,12 @@ const Login = () => {
                 setIsLoading(false);
                 navigate(routesMap.Home);
             },
-            onError() {},
+            onError(error) {
+                toast({
+                    status: "error",
+                    title: getAxiosError(error),
+                });
+            },
         },
     });
 
