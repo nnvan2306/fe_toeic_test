@@ -3,8 +3,7 @@ import api from "../../libs/axios";
 import { MutationConfig } from "../../libs/query";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-
-const createToDo = async (payload: FormData) => {
+export const createToDo = async (payload: FormData) => {
     const { data } = await api.post("/upload/single", payload);
     return data;
 };

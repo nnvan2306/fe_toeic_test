@@ -1,11 +1,11 @@
+import { queryOptions, useQuery } from "@tanstack/react-query";
 import api from "../../libs/axios";
 import { QueryConfig } from "../../libs/query";
-import { queryOptions, useQuery } from "@tanstack/react-query";
 
-export const GET_BLOG_QUERY_KEY = "blog";
+export const GET_BLOG_QUERY_KEY = "blog_GET";
 
 const getBlogs = async (id: number) => {
-    const { data } = await api.get(`/${id}`);
+    const { data } = await api.get(`/blog/${id}`);
     return data;
 };
 

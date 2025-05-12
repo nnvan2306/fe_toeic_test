@@ -3,7 +3,7 @@ import api from "../../libs/axios";
 import { MutationConfig } from "../../libs/query";
 
 const deleteBlog = async (id: number) => {
-    const { data } = await api.delete(`/${id}`);
+    const { data } = await api.delete(`/blog/${id}`);
     return data;
 };
 

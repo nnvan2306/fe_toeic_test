@@ -1,8 +1,8 @@
-import { useGlobalContext } from "../../../contexts/GlobalContext";
 import { Box } from "@chakra-ui/react";
-import { createPortal } from "react-dom";
-import Spinner from "../../../assets/svg/spin.svg";
 import { keyframes } from "@emotion/react";
+import { createPortal } from "react-dom";
+import { ClipLoader } from "react-spinners";
+import { useGlobalContext } from "../../../contexts/GlobalContext";
 
 type Props = {
     isLoading: boolean;
@@ -53,7 +53,9 @@ const LoadingOverlay = ({ isLoading }: Props) => {
                                 },
                             }}
                         >
-                            <Spinner />
+                            <ClipLoader
+                                size={150}
+                            />
                         </Box>
                     </Box>,
                     document.body

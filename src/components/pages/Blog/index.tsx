@@ -1,66 +1,32 @@
-import React from "react";
 import {
     Box,
     Container,
-    Heading,
-    Text,
-    SimpleGrid,
-    Image,
-    HStack,
-    VStack,
-    Button,
-    useColorModeValue,
     Flex,
+    Heading,
+    HStack,
+    Image,
+    SimpleGrid,
+    Text,
+    useColorModeValue,
+    VStack
 } from "@chakra-ui/react";
-import MainTemPlate from "../../templates/MainTemPlate";
+import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { routesMap } from "../../../routes/routes";
+import { useGetBlogs } from "../../../services/blog/get-blogs";
 import { BlogResponseType } from "../../../types/blog";
-
-const blogPosts: BlogResponseType[] = [
-    {
-        id: 1,
-        title: "Building Modern UIs with Chakra UI and React",
-        excerpt:
-            "Learn how to create beautiful, accessible user interfaces using Chakra UI component library with React.",
-        author: "Jane Smith",
-        date: "May 10, 2025",
-        readTime: "5 min",
-        imageUrl: "https://via.placeholder.com/500x300",
-    },
-    {
-        id: 2,
-        title: "TypeScript Best Practices for 2025",
-        excerpt:
-            "Discover the latest TypeScript patterns and practices that will improve your code quality.",
-        author: "John Doe",
-        date: "May 5, 2025",
-        readTime: "8 min",
-        imageUrl: "https://via.placeholder.com/500x300",
-    },
-    {
-        id: 3,
-        title: "State Management Solutions for React Applications",
-        excerpt:
-            "Compare different state management libraries and approaches for React applications.",
-        author: "Alex Johnson",
-        date: "April 28, 2025",
-        readTime: "6 min",
-        imageUrl: "https://via.placeholder.com/500x300",
-    },
-    {
-        id: 4,
-        title: "Creating Responsive Layouts with Chakra UI",
-        excerpt:
-            "Learn how to build fully responsive web designs using Chakra UI's powerful layout components.",
-        author: "Maria Garcia",
-        date: "April 22, 2025",
-        readTime: "7 min",
-        imageUrl: "https://via.placeholder.com/500x300",
-    },
-];
+import MainTemPlate from "../../templates/MainTemPlate";
 
 const Blog = () => {
+    const { data } = useGetBlogs({});
+    const blogPosts = useMemo(
+        () =>
+            (data?.data || []).map((item: BlogResponseType) => ({
+                ...item,
+            })),
+        [data]
+    ) as BlogResponseType[];
+
     return (
         <MainTemPlate>
             <Box py={8} w="100%">
@@ -102,28 +68,6 @@ const Blog = () => {
                                 </Text>
                             </Box>
                         )}
-
-                        {blogPosts.length > 0 && (
-                            <Flex justify="center" mt={4}>
-                                <HStack spacing={2}>
-                                    <Button size="sm" variant="outline">
-                                        Previous
-                                    </Button>
-                                    <Button size="sm" colorScheme="teal">
-                                        1
-                                    </Button>
-                                    <Button size="sm" variant="outline">
-                                        2
-                                    </Button>
-                                    <Button size="sm" variant="outline">
-                                        3
-                                    </Button>
-                                    <Button size="sm" variant="outline">
-                                        Next
-                                    </Button>
-                                </HStack>
-                            </Flex>
-                        )}
                     </VStack>
                 </Container>
             </Box>
@@ -156,7 +100,7 @@ const BlogCard: React.FC<{ post: BlogResponseType }> = ({ post }) => {
             }
         >
             <Image
-                src={post.imageUrl}
+                src={post.thumbnail}
                 alt={post.title}
                 objectFit="cover"
                 height="200px"
@@ -173,18 +117,15 @@ const BlogCard: React.FC<{ post: BlogResponseType }> = ({ post }) => {
                     {post.title}
                 </Heading>
 
-                <Text color={textColor} noOfLines={3} mb={4}>
-                    {post.excerpt}
+                <Text noOfLines={3} mb={4} padding={"0 10px"} w={"100%"} fontSize={12} color={"gray.500"}>
+                    {post.content}
                 </Text>
 
                 <Flex justifyContent="space-between" alignItems="center">
-                    <Text fontSize="sm" color={textColor}>
-                        By {post.author}
-                    </Text>
                     <HStack spacing={1} fontSize="xs" color={textColor}>
-                        <Text>{post.date}</Text>
+                        <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
                         <Text>•</Text>
-                        <Text>{post.readTime} read</Text>
+                        <Text>{new Date(post.createdAt).toLocaleDateString()} read</Text>
                     </HStack>
                 </Flex>
             </VStack>
