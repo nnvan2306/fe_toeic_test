@@ -18,7 +18,9 @@
         "user": "User Manage",
         "exam": "Exam Manage",
         "blog": "Blog Manage",
-        "chart": "Statistical"
+        "chart": "Statistical",
+        "category": "Category Manage",
+        "vocabulary": "Vocabulary Manage"
     },
     "noData": "No data found",
     "buttons": {

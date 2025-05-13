@@ -24,3 +24,9 @@ export const ExamManager = lazy(
 export const ExamNew = lazy(() => import("../components/pages/ExamNew"));
 export const ExamEdit = lazy(() => import("../components/pages/ExamNew"));
 export const Result = lazy(() => import("../components/pages/Result"));
+export const CategoryManage = lazy(
+    () => import("../components/pages/CategoryManage")
+);
+export const VocabularyManage = lazy(
+    () => import("../components/pages/VocabularyManage")
+);

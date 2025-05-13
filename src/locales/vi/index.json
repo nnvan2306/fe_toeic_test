@@ -18,7 +18,9 @@
         "user": "Quản lý người dùng",
         "exam": "Quản lý bài kiểm tra",
         "blog": "Quản lý blog",
-        "chart": "Thống kê"
+        "chart": "Thống kê",
+        "category": "Quản lý danh mục",
+        "vocabulary": "Quản lý từ vựng"
     },
     "noData": "Không có dữ liệu",
     "buttons": {

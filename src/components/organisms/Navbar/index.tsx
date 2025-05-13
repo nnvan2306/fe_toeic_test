@@ -48,6 +48,16 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             href: routesMap.ExamManager,
         },
         {
+            name: t("navbar.category"),
+            icon: icons.chart,
+            href: routesMap.CategoryManage,
+        },
+        {
+            name: t("navbar.vocabulary"),
+            icon: icons.chart,
+            href: routesMap.VocabularyManage,
+        },
+        {
             name: t("navbar.blog"),
             icon: icons.blog,
             href: routesMap.BlogManager,
