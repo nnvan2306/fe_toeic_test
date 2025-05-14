@@ -12,13 +12,20 @@ import {
     ModalHeader,
     ModalOverlay,
     Text,
-    useDisclosure
+    useDisclosure,
 } from "@chakra-ui/react";
-import MarkdownIt from 'markdown-it';
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import MarkdownIt from "markdown-it";
+import {
+    ReactNode,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { useTranslation } from "react-i18next";
-import MdEditor from 'react-markdown-editor-lite';
-import 'react-markdown-editor-lite/lib/index.css';
+import MdEditor from "react-markdown-editor-lite";
+import "react-markdown-editor-lite/lib/index.css";
 import api from "../../../libs/axios";
 import toast from "../../../libs/toast";
 import { useDeleteBlog } from "../../../services/blog/delete";
@@ -73,15 +80,19 @@ const BlogManager = () => {
     );
 
     const uploadFileMeditor = async (file: File) => {
-        const res = await api.post("/upload/single", {
-            file: file
-        }, {
-            headers: {
-                "Content-Type": "multipart/form-data"
+        const res = await api.post(
+            "/upload/single",
+            {
+                file: file,
+            },
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
             }
-        })
-        return res.data
-    }
+        );
+        return res.data;
+    };
 
     const { mutate, isPending: isPendingDelete } = useDeleteBlog({
         mutationConfig: {
@@ -90,10 +101,10 @@ const BlogManager = () => {
                 toast({
                     title: "Delete blog success",
                     status: "success",
-                })
+                });
                 onCloseDelete();
             },
-            onError() { },
+            onError() {},
         },
     });
     const handleDelete = useCallback(
@@ -105,7 +116,7 @@ const BlogManager = () => {
         async (e: React.ChangeEvent<HTMLInputElement>) => {
             const file = e.target.files?.[0];
             if (file) {
-                const res = await uploadFileMeditor(file)
+                const res = await uploadFileMeditor(file);
                 setImagePreview(res.data);
             }
         },
@@ -113,20 +124,20 @@ const BlogManager = () => {
     );
 
     function handleEditorChange({ text }: { text: string }) {
-        setContent(text)
+        setContent(text);
     }
 
     const handleUploadFileMdEditor = async (file: File) => {
-        const res = await uploadFileMeditor(file)
+        const res = await uploadFileMeditor(file);
         return res.data;
-    }
+    };
 
     const handleSubmit = async () => {
         if (!title || !content || !imagePreview) {
             toast({
                 title: "Required fill all information",
                 status: "error",
-            })
+            });
         }
 
         if (dataUpdate) {
@@ -134,76 +145,70 @@ const BlogManager = () => {
                 title,
                 content,
                 thumbnail: imagePreview,
-            }
+            };
 
             try {
-                setIsLoading(true)
-                await api.put(`/blog/${dataUpdate.id}`, dataBuild)
+                setIsLoading(true);
+                await api.put(`/blog/${dataUpdate.id}`, dataBuild);
                 toast({
                     title: "Update blog success",
                     status: "success",
-                })
+                });
                 refetch();
                 onCloseDelete();
-                setIsLoading(false)
-                setDataUpdate(null)
-
+                setIsLoading(false);
+                setDataUpdate(null);
             } catch (error) {
-                console.log(error)
+                console.log(error);
                 toast({
                     title: "Error Update blog",
                     status: "error",
-                })
-
+                });
             }
         } else {
             const dataBuild = {
                 title,
                 content,
                 thumbnail: imagePreview,
-            }
+            };
 
             try {
-                setIsLoading(true)
-                await api.post("/blog", dataBuild)
+                setIsLoading(true);
+                await api.post("/blog", dataBuild);
                 toast({
                     title: "Create blog success",
                     status: "success",
-                })
+                });
                 refetch();
                 onCloseDelete();
-                setIsLoading(false)
-                setDataUpdate(null)
-
+                setIsLoading(false);
+                setDataUpdate(null);
             } catch (error) {
-                console.log(error)
+                console.log(error);
                 toast({
                     title: "Error create blog",
                     status: "error",
-                })
+                });
             }
         }
-
-
-
-    }
+    };
 
     useEffect(() => {
         if (dataUpdate) {
-            setTitle(dataUpdate.title)
-            setContent(dataUpdate.content)
-            setImagePreview(dataUpdate.thumbnail)
+            setTitle(dataUpdate.title);
+            setContent(dataUpdate.content);
+            setImagePreview(dataUpdate.thumbnail);
         } else {
-            setTitle("")
-            setContent("")
-            setImagePreview("")
+            setTitle("");
+            setContent("");
+            setImagePreview("");
         }
-    }, [dataUpdate])
+    }, [dataUpdate]);
 
     return (
         <ManagerTemplate>
             <LoadingOverlay isLoading={isLoading} />
-            < Box px={5}>
+            <Box px={5}>
                 <TitleManage title={t("blogManage.title")} />
                 <HStack justifyContent="end" mb={2}>
                     <Button onClick={onOpen}>New</Button>
@@ -230,8 +235,12 @@ const BlogManager = () => {
                         </ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
-                            <FormCommon title="Title" >
-                                <Input placeholder="Title blog...." value={title} onChange={(e) => setTitle(e.target.value)} />
+                            <FormCommon title="Title">
+                                <Input
+                                    placeholder="Title blog...."
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                />
                             </FormCommon>
                             <br />
                             <FormCommon
@@ -242,15 +251,10 @@ const BlogManager = () => {
                                     type="file"
                                     hidden
                                     ref={refInput}
-                                    onChange={(e) =>
-                                        handleUploadFile(e)
-                                    }
+                                    onChange={(e) => handleUploadFile(e)}
                                 />
                                 {imagePreview ? (
-                                    <Image
-                                        alt="thumbnail"
-                                        src={imagePreview}
-                                    />
+                                    <Image alt="thumbnail" src={imagePreview} />
                                 ) : (
                                     <Box
                                         h="200px"
@@ -262,18 +266,29 @@ const BlogManager = () => {
                             </FormCommon>
                             <br />
                             <FormCommon title="content">
-                                <MdEditor onImageUpload={handleUploadFileMdEditor} placeholder="Write content blog...." style={{ height: '500px' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} value={content} />
+                                <MdEditor
+                                    onImageUpload={handleUploadFileMdEditor}
+                                    placeholder="Write content blog...."
+                                    style={{ height: "500px" }}
+                                    renderHTML={(text) => mdParser.render(text)}
+                                    onChange={handleEditorChange}
+                                    value={content}
+                                />
                             </FormCommon>
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button colorScheme="blue" mr={3} onClick={() => {
-                                onClose()
-                                setDataUpdate(null)
-                                setTitle("")
-                                setContent("")
-                                setImagePreview("")
-                            }}>
+                            <Button
+                                colorScheme="blue"
+                                mr={3}
+                                onClick={() => {
+                                    onClose();
+                                    setDataUpdate(null);
+                                    setTitle("");
+                                    setContent("");
+                                    setImagePreview("");
+                                }}
+                            >
                                 Close
                             </Button>
                             <Button variant="ghost" onClick={handleSubmit}>
@@ -294,7 +309,7 @@ const BlogManager = () => {
                     isLoading={isPendingDelete}
                 />
             </Box>
-        </ManagerTemplate >
+        </ManagerTemplate>
     );
 };
 
@@ -317,7 +332,18 @@ const FormCommon = ({ title, children, action }: FormCommonProps) => {
                 >
                     {title}
                 </Text>
-                {action ? <Text onClick={action} background={"#ee4d2d"} padding={"6px 10px"} borderRadius={"10px"} marginBottom={2} color={"white"} >Upload</Text> : null}
+                {action ? (
+                    <Text
+                        onClick={action}
+                        background={"#ee4d2d"}
+                        padding={"6px 10px"}
+                        borderRadius={"10px"}
+                        marginBottom={2}
+                        color={"white"}
+                    >
+                        Upload
+                    </Text>
+                ) : null}
             </HStack>
             {children}
         </Box>
