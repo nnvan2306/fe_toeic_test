@@ -16,6 +16,7 @@ import { routesMap } from "../../../routes/routes";
 import { useTranslation } from "react-i18next";
 import icons from "../../../constants/icons";
 import { useNavigate } from "react-router-dom";
+import { useAppSelector } from "../../../app/hooks";
 
 interface LinkItemProps {
     name: string;
@@ -30,6 +31,8 @@ const Navbar: React.FC<NavbarProps> = (props) => {
     const bgColor = useColorModeValue("white", "gray.800");
     const borderColor = useColorModeValue("gray.200", "gray.700");
 
+    const user = useAppSelector((state) => state.user);
+
     const navigate = useNavigate();
     const { t } = useTranslation();
 
@@ -43,6 +46,16 @@ const Navbar: React.FC<NavbarProps> = (props) => {
             name: t("navbar.exam"),
             icon: icons.exam,
             href: routesMap.ExamManager,
+        },
+        {
+            name: t("navbar.category"),
+            icon: icons.chart,
+            href: routesMap.CategoryManage,
+        },
+        {
+            name: t("navbar.vocabulary"),
+            icon: icons.chart,
+            href: routesMap.VocabularyManage,
         },
         {
             name: t("navbar.blog"),
@@ -70,9 +83,9 @@ const Navbar: React.FC<NavbarProps> = (props) => {
                     src="https://bit.ly/broken-link"
                     mb="2"
                 />
-                <Text fontWeight="medium">User Name</Text>
+                <Text fontWeight="medium">{user?.username}</Text>
                 <Text fontSize="sm" color="gray.500">
-                    user@example.com
+                    {user?.email}
                 </Text>
             </Flex>
 

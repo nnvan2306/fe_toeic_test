@@ -32,9 +32,42 @@
         "user": "Quản lý người dùng",
         "exam": "Quản lý bài kiểm tra",
         "blog": "Quản lý blog",
-        "chart": "Thống kê"
+        "chart": "Thống kê",
+        "category": "Quản lý danh mục",
+        "vocabulary": "Quản lý từ vựng"
+    },
+    "footer": {
+        "title": "Nền tảng luyện thi TOEIC hàng đầu tại Việt Nam giúp bạn đạt được mục tiêu điểm số mong muốn.",
+        "flash": {
+            "title": "Liên Kết Nhanh",
+            "items": [
+                "Trang Chủ",
+                "Bài Thi",
+                "Ôn Tập",
+                "Bài Viết",
+                "Giới Thiệu"
+            ]
+        },
+        "service": {
+            "title": "Dịch Vụ",
+            "items": [
+                "Tài Khoản Miễn Phí",
+                "Tài Khoản Premium",
+                "Khóa Học TOEIC",
+                "Tư Vấn Học Tập"
+            ]
+        },
+        "contact": {
+            "title": "Liên Hệ",
+            "items": ["Điện thoại: (84) 123 456 789", "Địa chỉ: Hà Nội"]
+        }
     },
     "noData": "Không có dữ liệu",
+    "buttons": {
+        "delete": "Xóa",
+        "update": "Cập nhật",
+        "new": "Tạo mới"
+    },
     "home": {
         "banner": {
             "title": "Giới Thiệu TOEIC Online Test",
@@ -131,5 +164,15 @@
     },
     "blogManage": {
         "title": "Quản lý bài viết"
+    },
+    "exam": {
+        "chart": "Thống kê học tập",
+        "completed": "Đã hoàn thành",
+        "noCompleted": "Chưa bắt đầu",
+        "button": "Bắt đầu"
+    },
+    "blog": {
+        "title": "Blog Của Chúng Tôi",
+        "subTitle": "Khám phá những hiểu biết, hướng dẫn và tin tức về phát triển web"
     }
 }

@@ -120,13 +120,36 @@ const TableCommon = ({
                                                         }
                                                     >
                                                         <Text noOfLines={5}>
-                                                            {
-                                                                get(item, itemColumn.key)?.toString()?.startsWith("http") ? <Image borderRadius={"10px"} maxHeight={"120px"} maxW={"140px"} alt="" src={get(item, itemColumn.key).toString()} />
-                                                                    : get(
+                                                            {get(
+                                                                item,
+                                                                itemColumn.key
+                                                            )
+                                                                ?.toString()
+                                                                .startsWith(
+                                                                    "http"
+                                                                ) ? (
+                                                                <Image
+                                                                    borderRadius={
+                                                                        "10px"
+                                                                    }
+                                                                    maxHeight={
+                                                                        "120px"
+                                                                    }
+                                                                    maxW={
+                                                                        "140px"
+                                                                    }
+                                                                    alt=""
+                                                                    src={get(
                                                                         item,
                                                                         itemColumn.key
-                                                                    )
-                                                            }
+                                                                    )?.toString()}
+                                                                />
+                                                            ) : (
+                                                                get(
+                                                                    item,
+                                                                    itemColumn.key
+                                                                )
+                                                            )}
                                                         </Text>
                                                     </Td>
                                                 );

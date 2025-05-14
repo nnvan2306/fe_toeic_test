@@ -2,17 +2,28 @@ import {
     Box,
     Button,
     Checkbox,
+    Divider,
+    Flex,
+    FormControl,
+    FormLabel,
     Grid,
     GridItem,
     HStack,
     Icon,
+    IconButton,
     Image,
     Input,
+    InputGroup,
     Select,
+    Spacer,
+    Tag,
     Text,
     Textarea,
+    Tooltip,
     VStack,
+    useColorModeValue,
 } from "@chakra-ui/react";
+import { BsPlus, BsPencil, BsImage, BsTrash } from "react-icons/bs";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import ManagerTemplate from "../../templates/ManagerTemplate";
@@ -20,11 +31,12 @@ import TitleManage from "../../atoms/TitleManage";
 import icons from "../../../constants/icons";
 import { useUploadFile } from "../../../services/upload/upload";
 import { useCreateExam } from "../../../services/exam/create";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useGetExam } from "../../../services/exam/get-exam";
 import { useUpdateExam } from "../../../services/exam/update";
 import toast from "../../../libs/toast";
 import { getAxiosError } from "../../../libs/axios";
+import { routesMap } from "../../../routes/routes";
 
 type AnswerType = {
     uuid: string;
@@ -33,7 +45,7 @@ type AnswerType = {
     isChoose: boolean;
 };
 
-type QuestionType = {
+export type QuestionType = {
     uuid: string;
     title: string;
     audio: string;
@@ -58,7 +70,11 @@ const defaultQuestion: QuestionType = {
 
 const ExamNew = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
+    const bgCard = useColorModeValue("white", "gray.700");
+    const borderColor = useColorModeValue("gray.200", "gray.600");
 
+    // const [time, setTime] = useState(0);
     const [title, setTitle] = useState("");
     const [type, setType] = useState("fulltest");
     const [description, setDescription] = useState("");
@@ -95,13 +111,14 @@ const ExamNew = () => {
         },
     });
 
-    const create = useCreateExam({
+    const { mutate: create, isPending } = useCreateExam({
         mutationConfig: {
             onSuccess() {
                 toast({
                     status: "success",
                     title: "Tạo bài kiểm tra thành công",
                 });
+                navigate(routesMap.ExamManager);
             },
             onError(error) {
                 toast({
@@ -112,13 +129,14 @@ const ExamNew = () => {
         },
     });
 
-    const update = useUpdateExam({
+    const { mutate: update, isPending: isPendingUpdate } = useUpdateExam({
         mutationConfig: {
             onSuccess() {
                 toast({
                     status: "success",
                     title: "Cập nhật bài kiểm tra thành công",
                 });
+                navigate(routesMap.ExamManager);
             },
             onError(error) {
                 toast({
@@ -151,82 +169,164 @@ const ExamNew = () => {
         }
         const payload = {
             title,
+            // time,
             type,
             description,
             questions: question,
         };
         if (id) {
-            update.mutate({ id: Number(id), ...payload });
+            update({ id: Number(id), ...payload });
         } else {
-            create.mutate(payload);
+            create(payload);
         }
     };
 
     useEffect(() => {
-        const data = examData?.data;
-        if (data) {
-            setTitle(data?.title || "");
-            setType(data?.type || "");
-            setDescription(data?.description);
-            setQuestion(JSON.parse(data?.questions));
+        if (!id) {
+            setTitle("");
+            setType("fulltest");
+            setDescription("");
+            setQuestion([]);
+        } else {
+            const data = examData?.data;
+            if (data) {
+                setTitle(data?.title || "");
+                setType(data?.type || "fulltest");
+                setDescription(data?.description);
+                setQuestion(JSON.parse(data?.questions));
+            }
         }
-    }, [examData]);
-
-    console.log(question);
+    }, [examData, id]);
 
     return (
         <ManagerTemplate>
             <Box>
-                <TitleManage title="New Exam" />
-                <Box w="100%" p={6} border="1px solid #ccc">
-                    <Grid templateColumns="repeat(2, 1fr)" gap={6} mb={6}>
-                        <FormCommon title="Title">
+                <Flex align="center" mb={4}>
+                    <TitleManage title={id ? "Edit Exam" : "New Exam"} />
+                    <Spacer />
+                    <Tag
+                        size="lg"
+                        colorScheme={type === "toeic" ? "blue" : "green"}
+                    >
+                        {type === "toeic" ? "TOEIC" : "Fulltest"}
+                    </Tag>
+                </Flex>
+
+                <Box
+                    w="100%"
+                    p={6}
+                    border="1px solid"
+                    borderColor={borderColor}
+                    borderRadius="md"
+                    bg={bgCard}
+                    boxShadow="sm"
+                >
+                    <Grid templateColumns="repeat(2, 1fr)" gap={8} mb={8}>
+                        <FormCommon title="Title" isRequired>
                             <Input
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Enter exam title"
+                                size="md"
                             />
                         </FormCommon>
+
                         <FormCommon title="Type">
                             <Select
                                 value={type}
                                 onChange={(e) => setType(e.target.value)}
+                                size="md"
                             >
-                                <option value="toeic">Toeic</option>
+                                <option value="toeic">TOEIC</option>
                                 <option value="fulltest">Fulltest</option>
                             </Select>
                         </FormCommon>
                         <GridItem colSpan={2}>
-                            <FormCommon title="Description">
+                            <FormCommon title="Description" isRequired>
                                 <Textarea
                                     value={description}
                                     onChange={(e) =>
                                         setDescription(e.target.value)
                                     }
+                                    placeholder="Enter exam description"
+                                    size="md"
+                                    minH="260px"
                                 />
                             </FormCommon>
                         </GridItem>
+                        {/* <FormCommon title="Time" isRequired>
+                            <Input
+                                type="number"
+                                value={time}
+                                onChange={(e) =>
+                                    setTime(Number(e.target.value))
+                                }
+                                placeholder="Enter exam title"
+                                size="md"
+                            />
+                        </FormCommon> */}
                     </Grid>
 
-                    <VStack w="100%" gap={4}>
-                        {question.map((q) => (
-                            <QuestionItem
-                                key={q.uuid}
-                                item={q}
-                                onUpdate={handleUpdateQuestion}
-                                onRemove={() =>
-                                    setQuestion((prev) =>
-                                        prev.filter(
-                                            (item) => item.uuid !== q.uuid
-                                        )
-                                    )
-                                }
-                                onUploadImage={handleUploadImage}
-                                onUploadAudio={handleUploadAudio}
-                            />
-                        ))}
-                    </VStack>
+                    <Divider my={6} />
 
-                    <HStack justifyContent="start" mt={4}>
+                    <Flex justify="space-between" align="center" mb={4}>
+                        <Text fontSize="xl" fontWeight="bold">
+                            Questions ({question.length})
+                        </Text>
+                    </Flex>
+
+                    <VStack w="100%" spacing={6}>
+                        {question.length === 0 ? (
+                            <Box
+                                py={10}
+                                textAlign="center"
+                                borderWidth="1px"
+                                borderStyle="dashed"
+                                borderColor={borderColor}
+                                borderRadius="md"
+                                w="100%"
+                            >
+                                <Text color="gray.500" mb={4}>
+                                    No questions added yet
+                                </Text>
+                                <Button
+                                    onClick={() =>
+                                        setQuestion((prev) => [
+                                            ...prev,
+                                            {
+                                                ...defaultQuestion,
+                                                uuid: uuidv4(),
+                                            },
+                                        ])
+                                    }
+                                    leftIcon={<Icon as={BsPlus} />}
+                                    colorScheme="blue"
+                                    size="sm"
+                                >
+                                    Add Your First Question
+                                </Button>
+                            </Box>
+                        ) : (
+                            question.map((q, index) => (
+                                <QuestionItem
+                                    key={q.uuid}
+                                    item={q}
+                                    index={index + 1}
+                                    onUpdate={handleUpdateQuestion}
+                                    onRemove={() =>
+                                        setQuestion((prev) =>
+                                            prev.filter(
+                                                (item) => item.uuid !== q.uuid
+                                            )
+                                        )
+                                    }
+                                    onUploadImage={handleUploadImage}
+                                    onUploadAudio={handleUploadAudio}
+                                />
+                            ))
+                        )}
+                    </VStack>
+                    {question.length ? (
                         <Button
                             onClick={() =>
                                 setQuestion((prev) => [
@@ -234,14 +334,29 @@ const ExamNew = () => {
                                     { ...defaultQuestion, uuid: uuidv4() },
                                 ])
                             }
+                            leftIcon={<Icon as={BsPlus} />}
+                            colorScheme="blue"
+                            size="md"
+                            mt={2}
                         >
                             Add Question
                         </Button>
-                    </HStack>
+                    ) : null}
 
-                    <HStack justifyContent="center" mt={4}>
-                        <Button onClick={handleSubmit}>Submit</Button>
-                    </HStack>
+                    <Divider my={8} />
+
+                    <Flex justify="center" mt={4}>
+                        <Button
+                            onClick={handleSubmit}
+                            colorScheme="green"
+                            size="lg"
+                            px={12}
+                            isDisabled={!title || !description}
+                            isLoading={isPending || isPendingUpdate}
+                        >
+                            {id ? "Update Exam" : "Create Exam"}
+                        </Button>
+                    </Flex>
                 </Box>
             </Box>
         </ManagerTemplate>
@@ -254,41 +369,62 @@ const FormCommon = ({
     title,
     children,
     action,
+    isRequired = false,
 }: {
     title: string;
     children: ReactNode;
     action?: () => void;
+    isRequired?: boolean;
 }) => (
-    <Box>
-        <HStack justifyContent="space-between">
-            <Text
-                fontSize={16}
-                fontWeight={500}
-                mb={1}
+    <FormControl>
+        <Flex justify="space-between" align="center" mb={2}>
+            <FormLabel
+                fontWeight={600}
+                mb={0}
                 textTransform="capitalize"
+                fontSize="md"
             >
-                {title}
-            </Text>
-            {action && <Text onClick={action}>Upload</Text>}
-        </HStack>
+                {title}{" "}
+                {isRequired && (
+                    <Text as="span" color="red.500">
+                        *
+                    </Text>
+                )}
+            </FormLabel>
+            {action && (
+                <Button
+                    onClick={action}
+                    size="xs"
+                    variant="outline"
+                    colorScheme="blue"
+                >
+                    Upload
+                </Button>
+            )}
+        </Flex>
         {children}
-    </Box>
+    </FormControl>
 );
 
 const QuestionItem = ({
     item,
+    index,
     onUpdate,
     onRemove,
     onUploadImage,
     onUploadAudio,
 }: {
     item: QuestionType;
+    index: number;
     onUpdate: (updated: QuestionType) => void;
     onRemove: () => void;
     onUploadImage: (uuid: string, file: File) => void;
     onUploadAudio: (uuid: string, file: File) => void;
 }) => {
     const refInput = useRef<HTMLInputElement>(null);
+    const audioRef = useRef<HTMLInputElement>(null);
+    const borderColor = useColorModeValue("gray.200", "gray.600");
+    const bgQuestion = useColorModeValue("gray.50", "gray.700");
 
     const updateField = (field: Partial<QuestionType>) =>
         onUpdate({ ...item, ...field });
@@ -302,17 +438,37 @@ const QuestionItem = ({
     return (
         <Box
             w="100%"
-            key={item.uuid}
-            border="1px solid #ccc"
-            p={4}
-            rounded={8}
+            border="1px solid"
+            borderColor={borderColor}
+            p={6}
+            rounded="md"
             position="relative"
+            bg={bgQuestion}
+            boxShadow="sm"
         >
-            <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-                <FormCommon title="Question Title">
+            <Flex position="absolute" top={3} right={3} align="center" gap={2}>
+                <Tag size="md" colorScheme="purple">
+                    Question {index}
+                </Tag>
+                <Tooltip label="Remove Question" placement="top">
+                    <IconButton
+                        aria-label="Remove question"
+                        icon={<Icon as={icons.close} />}
+                        colorScheme="red"
+                        variant="ghost"
+                        size="sm"
+                        rounded="full"
+                        onClick={onRemove}
+                    />
+                </Tooltip>
+            </Flex>
+
+            <Grid templateColumns="repeat(2, 1fr)" gap={6} mt={6}>
+                <FormCommon title="Question Title" isRequired>
                     <Input
                         value={item.title}
                         onChange={(e) => updateField({ title: e.target.value })}
+                        placeholder="Enter question"
                     />
                 </FormCommon>
 
@@ -328,20 +484,69 @@ const QuestionItem = ({
                             }}
                         />
                         {item.image ? (
-                            <Image
-                                alt="image"
-                                src={item.image}
-                                h="200px"
-                                objectFit="cover"
-                            />
+                            <Box position="relative">
+                                <Image
+                                    alt="Question image"
+                                    src={item.image}
+                                    h="200px"
+                                    w="100%"
+                                    objectFit="cover"
+                                    borderRadius="md"
+                                />
+                                <HStack
+                                    position="absolute"
+                                    bottom={2}
+                                    right={2}
+                                >
+                                    <IconButton
+                                        aria-label="Change image"
+                                        icon={<Icon as={BsPencil} />}
+                                        size="sm"
+                                        onClick={() =>
+                                            refInput.current?.click()
+                                        }
+                                    />
+                                    <IconButton
+                                        aria-label="Change image"
+                                        icon={<Icon as={BsTrash} color="red" />}
+                                        size="sm"
+                                        onClick={() =>
+                                            updateField({ image: "" })
+                                        }
+                                    />
+                                </HStack>
+                            </Box>
                         ) : (
                             <Box
                                 h="200px"
                                 border="1px dashed"
-                                borderColor="#ccc"
-                                rounded={6}
+                                borderColor={borderColor}
+                                rounded="md"
+                                display="flex"
+                                flexDirection="column"
+                                alignItems="center"
+                                justifyContent="center"
                                 onClick={() => refInput.current?.click()}
-                            />
+                                cursor="pointer"
+                                transition="all 0.2s"
+                                _hover={{
+                                    // eslint-disable-next-line react-hooks/rules-of-hooks
+                                    bg: useColorModeValue(
+                                        "gray.50",
+                                        "gray.700"
+                                    ),
+                                }}
+                            >
+                                <Icon
+                                    as={BsImage}
+                                    fontSize="3xl"
+                                    mb={2}
+                                    color="gray.400"
+                                />
+                                <Text color="gray.500">
+                                    Click to upload image
+                                </Text>
+                            </Box>
                         )}
                     </FormCommon>
                 </GridItem>
@@ -349,85 +554,205 @@ const QuestionItem = ({
                 <FormCommon title="Audio">
                     <input
                         type="file"
+                        hidden
+                        ref={audioRef}
                         onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) onUploadAudio(item.uuid, file);
                         }}
                     />
-                    {item.audio ? (
-                        <audio controls>
-                            <source src={item.audio} type="audio/ogg" />
-                            <source src={item.audio} type="audio/mpeg" />
-                        </audio>
-                    ) : null}
-                </FormCommon>
 
-                <FormCommon title="Answers">
-                    <VStack align="stretch" spacing={2}>
-                        {item.answers.map((ans) => (
-                            <HStack key={ans.uuid}>
-                                <Input
-                                    value={ans.content}
-                                    onChange={(e) =>
-                                        updateAnswer({
-                                            ...ans,
-                                            content: e.target.value,
-                                        })
-                                    }
-                                />
-                                <Checkbox
-                                    isChecked={ans.isCorect}
-                                    onChange={() =>
-                                        updateField({
-                                            answers: item.answers.map((a) => ({
-                                                ...a,
-                                                isCorect: a.uuid === ans.uuid,
-                                            })),
-                                        })
-                                    }
-                                />
-                                <Button
-                                    size="sm"
-                                    onClick={() =>
-                                        updateField({
-                                            answers: item.answers.filter(
-                                                (a) => a.uuid !== ans.uuid
-                                            ),
-                                        })
-                                    }
-                                >
-                                    Remove
-                                </Button>
+                    <Box
+                        border="1px"
+                        borderColor={borderColor}
+                        borderRadius="md"
+                        p={3}
+                    >
+                        {item.audio ? (
+                            <HStack spacing={4}>
+                                <audio controls style={{ width: "100%" }}>
+                                    <source src={item.audio} type="audio/ogg" />
+                                    <source
+                                        src={item.audio}
+                                        type="audio/mpeg"
+                                    />
+                                </audio>
+                                <HStack>
+                                    <IconButton
+                                        aria-label="Change audio"
+                                        icon={<Icon as={BsPencil} />}
+                                        size="sm"
+                                        onClick={() =>
+                                            audioRef.current?.click()
+                                        }
+                                    />
+                                    <IconButton
+                                        aria-label="Change audio"
+                                        icon={<Icon as={BsTrash} color="red" />}
+                                        size="sm"
+                                        onClick={() =>
+                                            updateField({ audio: "" })
+                                        }
+                                    />
+                                </HStack>
                             </HStack>
-                        ))}
-                        <Button
-                            size="sm"
-                            onClick={() =>
-                                updateField({
-                                    answers: [
-                                        ...item.answers,
-                                        { ...defaultAnswer, uuid: uuidv4() },
-                                    ],
-                                })
-                            }
-                        >
-                            Add Answer
-                        </Button>
-                    </VStack>
+                        ) : (
+                            <Button
+                                onClick={() => audioRef.current?.click()}
+                                w="100%"
+                                variant="outline"
+                                leftIcon={
+                                    <Icon
+                                        as={
+                                            icons.audio ||
+                                            (() => <span>🔊</span>)
+                                        }
+                                    />
+                                }
+                            >
+                                Upload Audio
+                            </Button>
+                        )}
+                    </Box>
                 </FormCommon>
-            </Grid>
 
-            <Button
-                position="absolute"
-                top={-5}
-                right={-5}
-                rounded="full"
-                w="36px"
-                h="36px"
-                onClick={onRemove}
-            >
-                <Icon color="red" as={icons.close} fontSize={24} />
-            </Button>
+                <GridItem colSpan={2}>
+                    <FormCommon title="Answer Options">
+                        <VStack align="stretch" spacing={3} mt={2}>
+                            {item.answers.length === 0 ? (
+                                <Box
+                                    py={4}
+                                    textAlign="center"
+                                    borderWidth="1px"
+                                    borderStyle="dashed"
+                                    borderColor={borderColor}
+                                    borderRadius="md"
+                                >
+                                    <Text color="gray.500" mb={2}>
+                                        No answer options added
+                                    </Text>
+                                </Box>
+                            ) : (
+                                item.answers.map((ans, ansIndex) => (
+                                    <Flex
+                                        key={ans.uuid}
+                                        // eslint-disable-next-line react-hooks/rules-of-hooks
+                                        bg={useColorModeValue(
+                                            "white",
+                                            "gray.800"
+                                        )}
+                                        p={3}
+                                        borderRadius="md"
+                                        borderWidth="1px"
+                                        borderColor={
+                                            ans.isCorect
+                                                ? "green.300"
+                                                : borderColor
+                                        }
+                                        align="center"
+                                    >
+                                        <Tag
+                                            size="sm"
+                                            mr={3}
+                                            colorScheme="blue"
+                                        >
+                                            {String.fromCharCode(65 + ansIndex)}
+                                        </Tag>
+                                        <InputGroup flex={1}>
+                                            <Input
+                                                value={ans.content}
+                                                onChange={(e) =>
+                                                    updateAnswer({
+                                                        ...ans,
+                                                        content: e.target.value,
+                                                    })
+                                                }
+                                                placeholder={`Answer option ${
+                                                    ansIndex + 1
+                                                }`}
+                                                borderColor="transparent"
+                                                _focus={{
+                                                    borderColor: "blue.300",
+                                                }}
+                                            />
+                                        </InputGroup>
+                                        <Tooltip label="Mark as correct answer">
+                                            <Checkbox
+                                                ml={2}
+                                                colorScheme="green"
+                                                size="lg"
+                                                isChecked={ans.isCorect}
+                                                onChange={() =>
+                                                    updateField({
+                                                        answers:
+                                                            item.answers.map(
+                                                                (a) => ({
+                                                                    ...a,
+                                                                    isCorect:
+                                                                        a.uuid ===
+                                                                        ans.uuid,
+                                                                })
+                                                            ),
+                                                    })
+                                                }
+                                            />
+                                        </Tooltip>
+                                        <IconButton
+                                            aria-label="Remove answer"
+                                            icon={
+                                                <Icon
+                                                    as={
+                                                        icons.delete ||
+                                                        (() => <span>🗑️</span>)
+                                                    }
+                                                />
+                                            }
+                                            variant="ghost"
+                                            colorScheme="red"
+                                            size="sm"
+                                            ml={2}
+                                            onClick={() =>
+                                                updateField({
+                                                    answers:
+                                                        item.answers.filter(
+                                                            (a) =>
+                                                                a.uuid !==
+                                                                ans.uuid
+                                                        ),
+                                                })
+                                            }
+                                        />
+                                    </Flex>
+                                ))
+                            )}
+                            <Button
+                                onClick={() =>
+                                    updateField({
+                                        answers: [
+                                            ...item.answers,
+                                            {
+                                                ...defaultAnswer,
+                                                uuid: uuidv4(),
+                                            },
+                                        ],
+                                    })
+                                }
+                                leftIcon={
+                                    <Icon
+                                        as={icons.add || (() => <span>+</span>)}
+                                    />
+                                }
+                                size="sm"
+                                colorScheme="blue"
+                                variant="outline"
+                                w="fit-content"
+                            >
+                                Add Answer Option
+                            </Button>
+                        </VStack>
+                    </FormCommon>
+                </GridItem>
+            </Grid>
         </Box>
     );
 };

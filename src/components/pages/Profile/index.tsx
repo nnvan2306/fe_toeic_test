@@ -17,13 +17,16 @@ import {
     useToast,
     VStack
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiEdit, FiMail, FiPhone, FiSave, FiUser, FiX } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import { formatDate } from "../../../helpers/formatdate";
 import api from "../../../libs/axios";
+import { useGetHistories } from "../../../services/history/get-by-user";
 import { setUserSlice } from "../../../store/features/user/userSlice";
 import { UserResponseType } from "../../../types/user";
+import TableCommon from "../../organisms/TableCommon";
 import MainTemPlate from "../../templates/MainTemPlate";
 
 const Profile = () => {
@@ -33,7 +36,7 @@ const Profile = () => {
 
     const setUser = (user: UserResponseType) => {
         dispatch(setUserSlice(user));
-    }
+    };
 
     const [editMode, setEditMode] = useState<boolean>(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -43,6 +46,19 @@ const Profile = () => {
     const borderColor = useColorModeValue("gray.200", "gray.600");
     const avatarBg = useColorModeValue("gray.50", "gray.800");
 
+    const { data } = useGetHistories({ id: user?.id || 0 });
+    const exams = useMemo(
+        () =>
+            (data?.data || []).map((item) => ({
+                ...item,
+                title: item?.Exam?.title || "",
+                score: JSON.parse(item.score),
+                date: formatDate(item?.created_at),
+            })),
+        [data]
+    );
+    console.log(data);
+
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
     ) => {
@@ -50,7 +66,7 @@ const Profile = () => {
         if (user) {
             setUser({
                 ...user,
-                [name]: value
+                [name]: value,
             });
         }
     };
@@ -113,223 +129,222 @@ const Profile = () => {
 
     return (
         <MainTemPlate>
-            {user ? <Container maxW="container.md" py={8}>
-                <Flex direction="column" align="center">
-                    <Heading size="xl" mb={8}>
-                        {t("profile.title")}
-                    </Heading>
+            {user ? (
+                <VStack w="100%" pb={10}>
+                    <Container maxW="container.md" py={8}>
+                        <Flex direction="column" align="center">
+                            <Heading size="xl" mb={8}>
+                                {t("profile.title")}
+                            </Heading>
 
-                    <Flex
-                        direction={{ base: "column", md: "row" }}
-                        w="full"
-                        bg={cardBg}
-                        borderRadius="lg"
-                        overflow="hidden"
-                        borderWidth="1px"
-                        borderColor={borderColor}
-                        boxShadow="lg"
-                    >
-                        <Flex
-                            direction="column"
-                            align="center"
-                            justify="center"
-                            p={8}
-                            bg={avatarBg}
-                            w={{ base: "full", md: "40%" }}
-                        >
-                            <Box position="relative" mb={4}>
-                                <Avatar
-                                    size="2xl"
-                                    name={user.name}
-                                    src={user.image}
-                                    mb={2}
-                                />
-                                {/* {editMode && (
-                                    <IconButton
-                                        aria-label="Change avatar"
-                                        icon={<FiEdit />}
-                                        size="sm"
-                                        colorScheme="blue"
-                                        position="absolute"
-                                        bottom={0}
-                                        right={0}
-                                        borderRadius="full"
-                                    />
-                                )} */}
-                            </Box>
-                            <Text fontSize="2xl" fontWeight="bold">
-                                {user.name}
-                            </Text>
-                            <Text color="gray.500" mb={4}>
-                                @{user.username}
-                            </Text>
-
-                            {!editMode ? (
-                                <Button
-                                    leftIcon={<FiEdit />}
-                                    colorScheme="blue"
-                                    onClick={() => setEditMode(true)}
-                                    w="full"
+                            <Flex
+                                direction={{ base: "column", md: "row" }}
+                                w="full"
+                                bg={cardBg}
+                                borderRadius="lg"
+                                overflow="hidden"
+                                borderWidth="1px"
+                                borderColor={borderColor}
+                                boxShadow="lg"
+                            >
+                                <Flex
+                                    direction="column"
+                                    align="center"
+                                    justify="center"
+                                    p={8}
+                                    bg={avatarBg}
+                                    w={{ base: "full", md: "40%" }}
                                 >
-                                    {t("profile.fields.actions.edit")}
-                                </Button>
-                            ) : (
-                                <HStack spacing={4} w="full">
-                                    <Button
-                                        leftIcon={<FiSave />}
-                                        colorScheme="green"
-                                        onClick={handleSave}
-                                        flex={1}
-                                    >
-                                        {t("profile.fields.actions.save")}
-                                    </Button>
-                                    <Button
-                                        leftIcon={<FiX />}
-                                        colorScheme="red"
-                                        onClick={handleCancel}
-                                        flex={1}
-                                    >
-                                        {t("profile.fields.actions.cancel")}
-                                    </Button>
-                                </HStack>
-                            )}
-                        </Flex>
-
-                        <VStack
-                            spacing={4}
-                            align="stretch"
-                            p={8}
-                            flex={1}
-                            divider={<Divider />}
-                        >
-                            <FormControl isInvalid={!!errors.name}>
-                                <Flex align="center" mb={2}>
-                                    <FiUser />
-                                    <FormLabel ml={2} mb={0}>
-                                        {t("profile.fields.fullName")}
-                                    </FormLabel>
-                                </Flex>
-                                {editMode ? (
-                                    <>
-                                        <Input
-                                            name="name"
-                                            value={user.name}
-                                            onChange={handleChange}
+                                    <Box position="relative" mb={4}>
+                                        <Avatar
+                                            size="2xl"
+                                            name={user.name}
+                                            src={user.image}
+                                            mb={2}
                                         />
-                                        {errors.name && (
-                                            <FormErrorMessage>
-                                                {errors.name}
-                                            </FormErrorMessage>
-                                        )}
-                                    </>
-                                ) : (
-                                    <Text>{user.name}</Text>
-                                )}
-                            </FormControl>
-
-                            <FormControl isInvalid={!!errors.email}>
-                                <Flex align="center" mb={2}>
-                                    <FiMail />
-                                    <FormLabel ml={2} mb={0}>
-                                        Email
-                                    </FormLabel>
-                                </Flex>
-                                {editMode ? (
-                                    <>
-                                        <Input
-                                            disabled
-                                            name="email"
-                                            value={user.email}
-                                            onChange={handleChange}
-                                            type="email"
-                                        />
-                                        {errors.email && (
-                                            <FormErrorMessage>
-                                                {errors.email}
-                                            </FormErrorMessage>
-                                        )}
-                                    </>
-                                ) : (
-                                    <Text>{user.email}</Text>
-                                )}
-                            </FormControl>
-
-                            <FormControl>
-                                <Flex align="center" mb={2}>
-                                    <FiUser />
-                                    <FormLabel ml={2} mb={0}>
-                                        {t("profile.fields.userName")}
-                                    </FormLabel>
-                                </Flex>
-                                {editMode ? (
-                                    <Input
-                                        name="username"
-                                        value={user.username}
-                                        onChange={handleChange}
-                                        isReadOnly
-                                        bg="gray.100"
-                                    />
-                                ) : (
-                                    <Text>{user.username}</Text>
-                                )}
-                            </FormControl>
-
-                            <FormControl isInvalid={!!errors.phone}>
-                                <Flex align="center" mb={2}>
-                                    <FiPhone />
-                                    <FormLabel ml={2} mb={0}>
-                                        {t("profile.fields.phoneNumber")}
-                                    </FormLabel>
-                                </Flex>
-                                {editMode ? (
-                                    <>
-                                        <Input
-                                            name="phone"
-                                            value={user.phone}
-                                            onChange={handleChange}
-                                        />
-                                        {errors.phone && (
-                                            <FormErrorMessage>
-                                                {errors.phone}
-                                            </FormErrorMessage>
-                                        )}
-                                    </>
-                                ) : (
-                                    <Text>{user.phone}</Text>
-                                )}
-                            </FormControl>
-
-                            <FormControl>
-                                <Flex align="center" mb={2}>
-                                    <FiUser />
-                                    <FormLabel ml={2} mb={0}>
-                                        {t("profile.fields.gender")}
-                                    </FormLabel>
-                                </Flex>
-                                {editMode ? (
-                                    <Select
-                                        name="gender"
-                                        value={user.gender}
-                                        onChange={handleChange}
-                                    >
-                                        <option value="male">Nam</option>
-                                        <option value="female">Nữ</option>
-                                        <option value="other">Khác</option>
-                                    </Select>
-                                ) : (
-                                    <Text>
-                                        {user.gender === "male"
-                                            ? "Nam"
-                                            : user.gender === "female"
-                                                ? "Nữ"
-                                                : "Khác"}
+                                        {/* {editMode && (
+                                            <IconButton
+                                                aria-label="Change avatar"
+                                                icon={<FiEdit />}
+                                                size="sm"
+                                                colorScheme="blue"
+                                                position="absolute"
+                                                bottom={0}
+                                                right={0}
+                                                borderRadius="full"
+                                            />
+                                        )} */}
+                                    </Box>
+                                    <Text fontSize="2xl" fontWeight="bold">
+                                        {user.name}
                                     </Text>
-                                )}
-                            </FormControl>
-                        </VStack>
-                    </Flex>
-                </Flex>
-            </Container> : ""}
+                                    <Text color="gray.500" mb={4}>
+                                        @{user.username}
+                                    </Text>
+
+                                    {!editMode ? (
+                                        <Button
+                                            leftIcon={<FiEdit />}
+                                            colorScheme="blue"
+                                            onClick={() => setEditMode(true)}
+                                            w="full"
+                                        >
+                                            {t("profile.fields.actions.edit")}
+                                        </Button>
+                                    ) : (
+                                        <HStack spacing={4} w="full">
+                                            <Button
+                                                leftIcon={<FiSave />}
+                                                colorScheme="green"
+                                                onClick={handleSave}
+                                                flex={1}
+                                            >
+                                                {t("profile.fields.actions.save")}
+                                            </Button>
+                                            <Button
+                                                leftIcon={<FiX />}
+                                                colorScheme="red"
+                                                onClick={handleCancel}
+                                                flex={1}
+                                            >
+                                                {t("profile.fields.actions.cancel")}
+                                            </Button>
+                                        </HStack>
+                                    )}
+                                </Flex>
+
+                                <VStack
+                                    spacing={4}
+                                    align="stretch"
+                                    p={8}
+                                    flex={1}
+                                    divider={<Divider />}
+                                >
+                                    <FormControl isInvalid={!!errors.name}>
+                                        <Flex align="center" mb={2}>
+                                            <FiUser />
+                                            <FormLabel ml={2} mb={0}>
+                                                {t("profile.fields.fullName")}
+                                            </FormLabel>
+                                        </Flex>
+                                        {editMode ? (
+                                            <>
+                                                <Input
+                                                    name="name"
+                                                    value={user.name}
+                                                    onChange={handleChange}
+                                                />
+                                                {errors.name && (
+                                                    <FormErrorMessage>
+                                                        {errors.name}
+                                                    </FormErrorMessage>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <Text>{user.name}</Text>
+                                        )}
+                                    </FormControl>
+
+                                    <FormControl isInvalid={!!errors.email}>
+                                        <Flex align="center" mb={2}>
+                                            <FiMail />
+                                            <FormLabel ml={2} mb={0}>
+                                                Email
+                                            </FormLabel>
+                                        </Flex>
+                                        {editMode ? (
+                                            <>
+                                                <Input
+                                                    name="email"
+                                                    value={user.email}
+                                                    onChange={handleChange}
+                                                    type="email"
+                                                />
+                                                {errors.email && (
+                                                    <FormErrorMessage>
+                                                        {errors.email}
+                                                    </FormErrorMessage>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <Text>{user.email}</Text>
+                                        )}
+                                    </FormControl>
+
+                                    <FormControl isInvalid={!!errors.phone}>
+                                        <Flex align="center" mb={2}>
+                                            <FiPhone />
+                                            <FormLabel ml={2} mb={0}>
+                                                {t("profile.fields.phoneNumber")}
+                                            </FormLabel>
+                                        </Flex>
+                                        {editMode ? (
+                                            <>
+                                                <Input
+                                                    name="phone"
+                                                    value={user.phone}
+                                                    onChange={handleChange}
+                                                />
+                                                {errors.phone && (
+                                                    <FormErrorMessage>
+                                                        {errors.phone}
+                                                    </FormErrorMessage>
+                                                )}
+                                            </>
+                                        ) : (
+                                            <Text>{user.phone}</Text>
+                                        )}
+                                    </FormControl>
+
+                                    <FormControl>
+                                        <Flex align="center" mb={2}>
+                                            <FiUser />
+                                            <FormLabel ml={2} mb={0}>
+                                                {t("profile.fields.gender")}
+                                            </FormLabel>
+                                        </Flex>
+                                        {editMode ? (
+                                            <Select
+                                                name="gender"
+                                                value={user.gender}
+                                                onChange={handleChange}
+                                                placeholder="Khác"
+                                            >
+                                                <option value="male">
+                                                    Nam
+                                                </option>
+                                                <option value="female">
+                                                    Nữ
+                                                </option>
+                                            </Select>
+                                        ) : (
+                                            <Text>
+                                                {user.gender === "male"
+                                                    ? "Nam"
+                                                    : user.gender === "female"
+                                                        ? "Nữ"
+                                                        : "Khác"}
+                                            </Text>
+                                        )}
+                                    </FormControl>
+                                </VStack>
+                            </Flex>
+                        </Flex>
+                    </Container>
+                    <Box w="80%">
+                        <TableCommon
+                            columns={[
+                                { key: "title", label: "Title" },
+                                { key: "score", label: "Score" },
+                                { key: "date", label: "Date" },
+                            ]}
+                            data={exams}
+                        />
+                    </Box>
+                </VStack>
+            ) : (
+                ""
+            )}
         </MainTemPlate>
     );
 };

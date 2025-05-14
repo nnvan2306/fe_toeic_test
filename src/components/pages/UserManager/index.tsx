@@ -20,7 +20,6 @@ import {
 import ManagerTemplate from "../../templates/ManagerTemplate";
 import TableCommon from "../../organisms/TableCommon";
 import TitleManage from "../../atoms/TitleManage";
-import { useTranslation } from "react-i18next";
 import { useGetUsers } from "../../../services/user/get-users";
 import { ReactNode, useCallback, useMemo, useState } from "react";
 import { UserResponseType } from "../../../types/user";
@@ -29,6 +28,7 @@ import { FiEdit } from "react-icons/fi";
 import ConfirmDelete from "../../organisms/ConfirmDelete";
 import { useDeleteUser } from "../../../services/user/delete";
 import { useUpdateUser } from "../../../services/user/update";
+import { useTranslation } from "react-i18next";
 
 const UserManager = () => {
     const { t } = useTranslation();
@@ -62,7 +62,7 @@ const UserManager = () => {
                                 onOpenDelete();
                             }}
                         >
-                            Xóa
+                            {t("buttons.delete")}
                         </Button>
 
                         <Button
@@ -79,7 +79,7 @@ const UserManager = () => {
                                 onOpen();
                             }}
                         >
-                            Cập nhật
+                            {t("buttons.update")}
                         </Button>
                     </HStack>
                 ),

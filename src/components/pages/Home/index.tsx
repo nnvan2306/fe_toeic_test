@@ -467,44 +467,37 @@ const Home = () => {
                                 <Heading as="h3" size="md">
                                     TOEIC Online Test
                                 </Heading>
-                                <Text>
-                                    Nền tảng luyện thi TOEIC hàng đầu tại Việt
-                                    Nam giúp bạn đạt được mục tiêu điểm số mong
-                                    muốn.
-                                </Text>
+                                <Text>{t("footer.title")}</Text>
                             </VStack>
 
                             <VStack align="flex-start" spacing={4}>
                                 <Heading as="h3" size="md">
-                                    Liên Kết Nhanh
+                                    {t("footer.flash.title")}
                                 </Heading>
-                                <Link>Trang Chủ</Link>
-                                <Link>Bài Thi</Link>
-                                <Link>Ôn Tập</Link>
-                                <Link>Bài Viết</Link>
-                                <Link>Giới Thiệu</Link>
+                                <Link>{t("footer.flash.items.0")}</Link>
+                                <Link>{t("footer.flash.items.1")}</Link>
+                                <Link>{t("footer.flash.items.2")}</Link>
+                                <Link>{t("footer.flash.items.3")}</Link>
+                                <Link>{t("footer.flash.items.4")}</Link>
                             </VStack>
 
                             <VStack align="flex-start" spacing={4}>
                                 <Heading as="h3" size="md">
-                                    Dịch Vụ
+                                    {t("footer.service.title")}
                                 </Heading>
-                                <Link>Tài Khoản Miễn Phí</Link>
-                                <Link>Tài Khoản Premium</Link>
-                                <Link>Khóa Học TOEIC</Link>
-                                <Link>Tư Vấn Học Tập</Link>
+                                <Link>{t("footer.service.items.o")}</Link>
+                                <Link>{t("footer.service.items.1")}</Link>
+                                <Link>{t("footer.service.items.2")}</Link>
+                                <Link>{t("footer.service.items.3")}</Link>
                             </VStack>
 
                             <VStack align="flex-start" spacing={4}>
                                 <Heading as="h3" size="md">
-                                    Liên Hệ
+                                    {t("footer.contact.title")}
                                 </Heading>
                                 <Text>Email: info@toeic-test.vn</Text>
-                                <Text>Điện thoại: (84) 123 456 789</Text>
-                                <Text>
-                                    Địa chỉ: 123 Đường Nguyễn Huệ, Quận 1,
-                                    TP.HCM
-                                </Text>
+                                <Text>{t("footer.contact.items.0")}</Text>
+                                <Text>{t("footer.contact.items.1")}</Text>
                             </VStack>
                         </Grid>
 

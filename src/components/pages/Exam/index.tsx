@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
     Box,
     Flex,
@@ -21,53 +21,37 @@ import { ExamResponseType } from "../../../types/exam";
 import { useNavigate } from "react-router-dom";
 import { routesMap } from "../../../routes/routes";
 import toeic from "../../../../public/toeic.jpg";
-
-const examData: ExamResponseType[] = [
-    {
-        id: 1,
-        title: "ETS TOEIC 2023 - Test 1",
-        description: "Đề thi chính thức từ ETS năm 2023",
-        duration: 120,
-        questions: 200,
-    },
-    {
-        id: 2,
-        title: "TOEIC Listening Practice",
-        description: "Luyện tập kỹ năng nghe với 50 câu hỏi",
-        duration: 45,
-        questions: 50,
-    },
-    {
-        id: 3,
-        title: "TOEIC Reading Comprehension",
-        description: "Nâng cao kỹ năng đọc hiểu",
-        duration: 60,
-        questions: 50,
-    },
-    {
-        id: 4,
-        title: "ETS TOEIC 2023 - Test 2",
-        description: "Đề thi chính thức từ ETS năm 2023",
-        duration: 120,
-        questions: 200,
-    },
-    {
-        id: 5,
-        title: "Business Vocabulary Test",
-        description: "Kiểm tra từ vựng trong môi trường doanh nghiệp",
-        duration: 30,
-        questions: 40,
-    },
-    {
-        id: 6,
-        title: "Grammar Challenge",
-        description: "Thử thách ngữ pháp tiếng Anh cơ bản và nâng cao",
-        duration: 25,
-        questions: 30,
-    },
-];
+import { useGetExams } from "../../../services/exam/get-exams";
+import { useGetHistories } from "../../../services/history/get-by-user";
+import { useAppSelector } from "../../../app/hooks";
+import { useTranslation } from "react-i18next";
 
 const Exam: React.FC = () => {
+    const { t } = useTranslation();
+    const user = useAppSelector((state) => state.user);
+    const { data } = useGetExams({});
+    const exams = useMemo(
+        () =>
+            (data?.data || []).map((item: ExamResponseType) => ({
+                ...item,
+                duration: 25,
+                questions: item?.questions
+                    ? JSON.parse(item?.questions)?.length
+                    : 0,
+            })),
+        [data]
+    );
+
+    const { data: examOld } = useGetHistories({ id: user?.id || 0 });
+    const old = useMemo(() => {
+        const list = (examOld?.data || []).map((item) => item.examId);
+
+        const result = (data?.data || []).filter((item) =>
+            list.some((examId) => examId === item.id)
+        );
+        return result.length;
+    }, [examOld, data]);
+
     return (
         <MainTemPlate>
             <Box w="100%">
@@ -84,38 +68,29 @@ const Exam: React.FC = () => {
                     <HStack>
                         <Icon as={FiBarChart2} boxSize={6} color="blue.500" />
                         <Box>
-                            <Text fontWeight="bold">Thống kê học tập</Text>
-                            <Text fontSize="sm" color="gray.600">
+                            <Text fontWeight="bold">{t("exam.chart")}</Text>
+                            {/* <Text fontSize="sm" color="gray.600">
                                 Tiến độ của bạn
-                            </Text>
+                            </Text> */}
                         </Box>
                     </HStack>
 
                     <HStack spacing={8} wrap="wrap">
                         <VStack spacing={0} align="flex-start">
                             <Text fontSize="sm" color="gray.600">
-                                Đã hoàn thành
+                                {t("exam.completed")}
                             </Text>
                             <Text fontWeight="bold" fontSize="xl">
-                                1
+                                {old}
                             </Text>
                         </VStack>
 
                         <VStack spacing={0} align="flex-start">
                             <Text fontSize="sm" color="gray.600">
-                                Đang làm
+                                {t("exam.noCompleted")}
                             </Text>
                             <Text fontWeight="bold" fontSize="xl">
-                                2
-                            </Text>
-                        </VStack>
-
-                        <VStack spacing={0} align="flex-start">
-                            <Text fontSize="sm" color="gray.600">
-                                Chưa bắt đầu
-                            </Text>
-                            <Text fontWeight="bold" fontSize="xl">
-                                3
+                                {data?.data?.length - old}
                             </Text>
                         </VStack>
                     </HStack>
@@ -125,16 +100,16 @@ const Exam: React.FC = () => {
                     columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
                     spacing={6}
                 >
-                    {examData.map((exam) => (
+                    {exams.map((exam: ExamResponseType) => (
                         <ExamCard key={exam.id} exam={exam} />
                     ))}
                 </SimpleGrid>
 
-                <Flex justify="center" mt={10}>
+                {/* <Flex justify="center" mt={10}>
                     <Button variant="outline" size="md">
                         Xem thêm bài kiểm tra
                     </Button>
-                </Flex>
+                </Flex> */}
             </Box>
         </MainTemPlate>
     );
@@ -147,6 +122,8 @@ type ExamCardProps = {
 };
 
 const ExamCard: React.FC<ExamCardProps> = ({ exam }) => {
+    const { t } = useTranslation();
+
     const navigate = useNavigate();
     return (
         <Card
@@ -175,7 +152,8 @@ const ExamCard: React.FC<ExamCardProps> = ({ exam }) => {
                     <HStack spacing={4} mt={1}>
                         <Flex align="center">
                             <Icon as={FiClock} mr={1} color="gray.500" />
-                            <Text fontSize="xs">{exam.duration} phút</Text>
+                            {/* <Text fontSize="xs">{exam.time} phút</Text> */}
+                            <Text fontSize="xs">120 phút</Text>
                         </Flex>
                         <Flex align="center">
                             <Icon as={FiBookOpen} mr={1} color="gray.500" />
@@ -198,7 +176,7 @@ const ExamCard: React.FC<ExamCardProps> = ({ exam }) => {
                         )
                     }
                 >
-                    Bắt đầu
+                    {t("exam.button")}
                 </Button>
             </CardFooter>
         </Card>

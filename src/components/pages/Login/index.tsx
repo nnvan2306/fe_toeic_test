@@ -48,7 +48,7 @@ const Login = () => {
                 dispatch(login(data.data));
                 toast({
                     status: "success",
-                    title: "Tạo tài khoản thành công",
+                    title: "Đăng nhập thành công",
                 });
                 setIsLoading(false);
                 navigate(routesMap.Home);

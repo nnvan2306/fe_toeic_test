@@ -4,23 +4,18 @@ import { MutationConfig } from "../../libs/query";
 
 type PayLoadType = {
     title: string;
-    description: string;
-    type: string;
-    // time: number;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    questions: any;
 };
 
 const create = async (payload: PayLoadType) => {
-    const { data } = await api.post("/exam", payload);
+    const { data } = await api.post("/category", payload);
     return data;
 };
 
-type CreateExamType = {
+type CreateCategoryType = {
     mutationConfig?: MutationConfig<typeof create>;
 };
 
-export const useCreateExam = ({ mutationConfig }: CreateExamType) => {
+export const useCreateCategory = ({ mutationConfig }: CreateCategoryType) => {
     return useMutation({
         ...mutationConfig,
         mutationFn: create,

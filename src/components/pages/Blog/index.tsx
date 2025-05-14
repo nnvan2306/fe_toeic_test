@@ -8,7 +8,7 @@ import {
     SimpleGrid,
     Text,
     useColorModeValue,
-    VStack
+    VStack,
 } from "@chakra-ui/react";
 import React, { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +16,10 @@ import { routesMap } from "../../../routes/routes";
 import { useGetBlogs } from "../../../services/blog/get-blogs";
 import { BlogResponseType } from "../../../types/blog";
 import MainTemPlate from "../../templates/MainTemPlate";
+import { useTranslation } from "react-i18next";
 
 const Blog = () => {
+    const { t } = useTranslation();
     const { data } = useGetBlogs({});
     const blogPosts = useMemo(
         () =>
@@ -34,7 +36,7 @@ const Blog = () => {
                     <VStack spacing={8} align="stretch">
                         <VStack spacing={2} textAlign="center" mb={6}>
                             <Heading as="h1" size="2xl">
-                                Our Blog
+                                {t("blog.title")}
                             </Heading>
                             <Text
                                 fontSize="lg"
@@ -43,8 +45,7 @@ const Blog = () => {
                                     "gray.400"
                                 )}
                             >
-                                Discover insights, tutorials, and news about web
-                                development
+                                {t("blog.subTitle")}
                             </Text>
                         </VStack>
 
@@ -117,15 +118,26 @@ const BlogCard: React.FC<{ post: BlogResponseType }> = ({ post }) => {
                     {post.title}
                 </Heading>
 
-                <Text noOfLines={3} mb={4} padding={"0 10px"} w={"100%"} fontSize={12} color={"gray.500"}>
+                <Text
+                    noOfLines={3}
+                    mb={4}
+                    padding={"0 10px"}
+                    w={"100%"}
+                    fontSize={12}
+                    color={"gray.500"}
+                >
                     {post.content}
                 </Text>
 
                 <Flex justifyContent="space-between" alignItems="center">
                     <HStack spacing={1} fontSize="xs" color={textColor}>
-                        <Text>{new Date(post.createdAt).toLocaleDateString()}</Text>
+                        <Text>
+                            {new Date(post.createdAt).toLocaleDateString()}
+                        </Text>
                         <Text>•</Text>
-                        <Text>{new Date(post.createdAt).toLocaleDateString()} read</Text>
+                        <Text>
+                            {new Date(post.createdAt).toLocaleDateString()} read
+                        </Text>
                     </HStack>
                 </Flex>
             </VStack>

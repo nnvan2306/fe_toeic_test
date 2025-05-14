@@ -41,7 +41,7 @@ const ExamManager = () => {
                 <TitleManage title={t("examManage.title")} />
                 <HStack justifyContent="end" mb={2}>
                     <Button onClick={() => navigate(routesMap.ExamNew)}>
-                        New
+                        {t("buttons.new")}
                     </Button>
                 </HStack>
                 <TableCommon

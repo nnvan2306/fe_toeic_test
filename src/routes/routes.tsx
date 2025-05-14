@@ -2,6 +2,7 @@ import {
     Blog,
     BlogDetail,
     BlogManager,
+    CategoryManage,
     Chart,
     Dashboard,
     Exam,
@@ -13,8 +14,10 @@ import {
     Login,
     Profile,
     Register,
+    Result,
     ToDo,
     UserManager,
+    VocabularyManage,
 } from "./index";
 
 export const routes = [
@@ -118,6 +121,24 @@ export const routes = [
         name: "ExamEdit",
         path: "/admin/exam/edit/:id",
         element: <ExamNew />,
+        requiresAuth: true,
+    },
+    {
+        name: "Result",
+        path: "/admin/exam/result/:id",
+        element: <Result />,
+        requiresAuth: true,
+    },
+    {
+        name: "CategoryManage",
+        path: "/admin/category",
+        element: <CategoryManage />,
+        requiresAuth: true,
+    },
+    {
+        name: "VocabularyManage",
+        path: "/admin/vocabulary",
+        element: <VocabularyManage />,
         requiresAuth: true,
     },
 ] as const;
