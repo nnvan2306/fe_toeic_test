@@ -2,12 +2,11 @@ import {
     Box,
     Flex,
     Heading,
-    Progress,
     Stat,
     StatLabel,
     StatNumber,
     StatHelpText,
-    Badge,
+    // Badge,
     SimpleGrid,
     Card,
     CardHeader,
@@ -26,27 +25,28 @@ const Result = () => {
         () => (data?.data?.score ? JSON.parse(data?.data?.score) : ""),
         [data]
     );
-    const scorePercentage = useMemo(
-        () =>
-            score
-                ? Number(
-                      (
-                          Number(score.split("/")[0]) /
-                          Number(score.split("/")[1])
-                      ).toFixed(0)
-                  ) * 100
-                : "",
-        [score]
-    );
 
-    const getScoreColor = (percentage: number) => {
-        if (percentage < 50) return "red";
-        if (percentage < 70) return "yellow";
-        if (percentage < 90) return "blue";
-        return "green";
-    };
+    // const scorePercentage = useMemo(
+    //     () =>
+    //         score
+    //             ? Number(
+    //                   (
+    //                       Number(score.split("/")[0]) /
+    //                       Number(score.split("/")[1])
+    //                   ).toFixed(0)
+    //               ) * 100
+    //             : "",
+    //     [score]
+    // );
 
-    const scoreColor = getScoreColor(scorePercentage);
+    // const getScoreColor = (percentage: number) => {
+    //     if (percentage < 50) return "red";
+    //     if (percentage < 70) return "yellow";
+    //     if (percentage < 90) return "blue";
+    //     return "green";
+    // };
+
+    // const scoreColor = getScoreColor(scorePercentage);
 
     return (
         <MainTemPlate>
@@ -66,13 +66,13 @@ const Result = () => {
                             <Stat>
                                 <StatLabel>Score</StatLabel>
                                 <StatNumber>{score}</StatNumber>
-                                <StatHelpText>{scorePercentage}%</StatHelpText>
-                                <Progress
+                                {/* <StatHelpText>{scorePercentage}%</StatHelpText> */}
+                                {/* <Progress
                                     value={scorePercentage}
                                     colorScheme={scoreColor}
                                     mt={2}
                                     borderRadius="md"
-                                />
+                                /> */}
                             </Stat>
 
                             <Stat>
@@ -89,7 +89,7 @@ const Result = () => {
                             </Stat>
                         </SimpleGrid>
 
-                        <Box mt={4}>
+                        {/* <Box mt={4}>
                             <Badge
                                 colorScheme={scoreColor}
                                 fontSize="md"
@@ -99,7 +99,7 @@ const Result = () => {
                             >
                                 {scorePercentage >= 70 ? "PASSED" : "FAILED"}
                             </Badge>
-                        </Box>
+                        </Box> */}
                     </CardBody>
                 </Card>
             </Box>

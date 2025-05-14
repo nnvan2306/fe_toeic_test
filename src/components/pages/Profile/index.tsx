@@ -291,6 +291,7 @@ const Profile = () => {
                                                 name="gender"
                                                 value={user.gender}
                                                 onChange={handleChange}
+                                                placeholder="Khác"
                                             >
                                                 <option value="male">
                                                     Nam
