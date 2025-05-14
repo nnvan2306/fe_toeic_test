@@ -211,7 +211,14 @@ const BlogManager = () => {
             <Box px={5}>
                 <TitleManage title={t("blogManage.title")} />
                 <HStack justifyContent="end" mb={2}>
-                    <Button onClick={onOpen}>New</Button>
+                    <Button
+                        onClick={() => {
+                            setDataUpdate(null);
+                            onOpen();
+                        }}
+                    >
+                        New
+                    </Button>
                 </HStack>
                 <TableCommon
                     columns={[

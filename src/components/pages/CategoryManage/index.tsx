@@ -60,6 +60,7 @@ const CategoryManage = () => {
             })),
         [data]
     );
+
     const { mutate, isPending } = useCreateCategory({
         mutationConfig: {
             onSuccess() {
