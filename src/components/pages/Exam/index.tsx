@@ -35,7 +35,9 @@ const Exam: React.FC = () => {
             (data?.data || []).map((item: ExamResponseType) => ({
                 ...item,
                 duration: 25,
-                questions: JSON.parse(item?.questions)?.length || 0,
+                questions: item?.questions
+                    ? JSON.parse(item?.questions)?.length
+                    : 0,
             })),
         [data]
     );

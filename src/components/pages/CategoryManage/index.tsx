@@ -150,6 +150,7 @@ const CategoryManage = () => {
             setTitle("");
         }
     }, [dataUpdate]);
+
     return (
         <ManagerTemplate>
             {/* <LoadingOverlay isLoading={isLoading} /> */}

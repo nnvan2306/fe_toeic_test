@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
     Box,
     Tabs,
@@ -31,77 +31,8 @@ import MainTemPlate from "../../templates/MainTemPlate";
 import { FaInfoCircle, FaRedo, FaChevronRight } from "react-icons/fa";
 import { grammarTopics } from "../../../constants";
 import { IconType } from "react-icons/lib";
-
-const vocabularySets = [
-    {
-        id: 1,
-        title: "Basic Travel Vocabulary",
-        category: "Travel",
-        words: [
-            {
-                word: "accommodation",
-                definition: "A place to stay, such as a hotel or apartment",
-                example: "We need to book accommodation for our trip.",
-            },
-            {
-                word: "itinerary",
-                definition: "A planned route or journey",
-                example: "Our itinerary includes visits to three cities.",
-            },
-            {
-                word: "luggage",
-                definition: "Bags, suitcases that you carry when traveling",
-                example: "Don't forget to check your luggage at the counter.",
-            },
-            {
-                word: "destination",
-                definition: "The place where someone is going",
-                example: "Paris is our final destination.",
-            },
-            {
-                word: "reservation",
-                definition: "An arrangement to have something kept for you",
-                example: "I made a reservation at the restaurant.",
-            },
-        ],
-        completed: false,
-    },
-    {
-        id: 2,
-        title: "Business English",
-        category: "Business",
-        words: [
-            {
-                word: "negotiate",
-                definition: "To try to reach an agreement by discussion",
-                example: "We need to negotiate better terms.",
-            },
-            {
-                word: "deadline",
-                definition: "A date or time by which something must be done",
-                example: "The deadline for this project is Friday.",
-            },
-            {
-                word: "stakeholder",
-                definition: "A person with an interest in a business",
-                example:
-                    "We need to consider all stakeholders in this decision.",
-            },
-            {
-                word: "revenue",
-                definition: "Income from business activities",
-                example: "Our revenue increased by 15% last quarter.",
-            },
-            {
-                word: "outsource",
-                definition:
-                    "To obtain goods or services from an outside supplier",
-                example: "We decided to outsource our IT support.",
-            },
-        ],
-        completed: false,
-    },
-];
+import { useGetCategoris } from "../../../services/category/get-all";
+import { CategoryResponseType } from "../../../types/category";
 
 type WordType = {
     word: string;
@@ -139,6 +70,19 @@ const Learn = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [filterCategory, setFilterCategory] = useState<string>("");
 
+    const { data } = useGetCategoris({});
+    const vocabularySets = useMemo(
+        () =>
+            (data?.data || []).map((item: CategoryResponseType) => ({
+                id: item.id,
+                title: item.title,
+                category: item.title,
+                words: item.Vocabularies,
+                completed: false,
+            })),
+        [data]
+    );
+
     const filteredVocabSets = vocabularySets.filter((set) => {
         const matchesSearch = set.title
             .toLowerCase()
@@ -152,7 +96,7 @@ const Learn = () => {
     const nextFlashcard = () => {
         if (
             activeVocabSet &&
-            flashcardIndex < activeVocabSet.words.length - 1
+            flashcardIndex < activeVocabSet.words?.length - 1
         ) {
             setFlashcardIndex(flashcardIndex + 1);
             setShowDefinition(false);
@@ -167,7 +111,7 @@ const Learn = () => {
             setFlashcardIndex(flashcardIndex - 1);
             setShowDefinition(false);
         } else if (activeVocabSet) {
-            setFlashcardIndex(activeVocabSet.words.length - 1);
+            setFlashcardIndex(activeVocabSet.words?.length - 1);
             setShowDefinition(false);
         }
     };
@@ -353,7 +297,7 @@ const Learn = () => {
                                         </Heading>
 
                                         <Flex mb={4} gap={4}>
-                                            <FormControl>
+                                            {/* <FormControl>
                                                 <FormLabel>Search</FormLabel>
                                                 <Input
                                                     placeholder="Search vocabulary sets..."
@@ -376,20 +320,27 @@ const Learn = () => {
                                                         )
                                                     }
                                                 >
-                                                    <option value="Travel">
-                                                        Travel
-                                                    </option>
-                                                    <option value="Business">
-                                                        Business
-                                                    </option>
-                                                    <option value="Academic">
-                                                        Academic
-                                                    </option>
-                                                    <option value="Daily Life">
-                                                        Daily Life
-                                                    </option>
+                                                    {vocabularySets?.length
+                                                        ? vocabularySets.map(
+                                                              (
+                                                                  item: CategoryResponseType
+                                                              ) => {
+                                                                  return (
+                                                                      <option
+                                                                          value={
+                                                                              item.id
+                                                                          }
+                                                                      >
+                                                                          {
+                                                                              item.title
+                                                                          }
+                                                                      </option>
+                                                                  );
+                                                              }
+                                                          )
+                                                        : null}
                                                 </Select>
-                                            </FormControl>
+                                            </FormControl> */}
                                         </Flex>
 
                                         <Flex flexWrap="wrap" gap={4}>
@@ -433,7 +384,7 @@ const Learn = () => {
                                                             {set.category}
                                                         </Badge>
                                                         <Text fontSize="sm">
-                                                            {set.words.length}{" "}
+                                                            {set.words?.length}{" "}
                                                             words
                                                         </Text>
                                                     </CardBody>
@@ -467,13 +418,13 @@ const Learn = () => {
                                     <Flex justify="center" mb={2}>
                                         <Text>
                                             Card {flashcardIndex + 1} of{" "}
-                                            {activeVocabSet.words.length}
+                                            {activeVocabSet.words?.length}
                                         </Text>
                                     </Flex>
                                     <Progress
                                         value={
                                             ((flashcardIndex + 1) /
-                                                activeVocabSet.words.length) *
+                                                activeVocabSet.words?.length) *
                                             100
                                         }
                                         size="sm"

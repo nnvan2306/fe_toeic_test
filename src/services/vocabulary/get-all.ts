@@ -2,16 +2,20 @@ import { queryOptions, useQuery } from "@tanstack/react-query";
 import api from "../../libs/axios";
 import { QueryConfig } from "../../libs/query";
 
-export const GET_CATEGORIES_QUERY_KEY = "categories";
+export const GET_CATEGORIES_QUERY_KEY = "vocabularies";
 
 const get = async (categoryId?: number) => {
-    const { data } = await api.get(`/vocabulary?categoryId=${categoryId}`);
+    let query = "/vocabulary";
+    if (categoryId) {
+        query = `/vocabulary?categoryId=${categoryId}`;
+    }
+    const { data } = await api.get(query);
     return data;
 };
 
 export const getOptions = (categoryId?: number) =>
     queryOptions({
-        queryKey: [GET_CATEGORIES_QUERY_KEY],
+        queryKey: [GET_CATEGORIES_QUERY_KEY, categoryId],
         queryFn: () => get(categoryId),
     });
 
