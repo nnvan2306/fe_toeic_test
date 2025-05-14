@@ -14,6 +14,20 @@
             "logout": "Đăng xuất"
         }
     },
+    "profile": {
+        "title": "Hồ Sơ Cá Nhân",
+        "fields": {
+            "fullName": "Họ và tên",
+            "userName": "Tên đăng nhập",
+            "phoneNumber": "Số điện thoại",
+            "gender": "Giới tính",
+            "actions": {
+                "edit": "Chỉnh sửa thông tin",
+                "save": "Lưu",
+                "cancel": "Hủy"
+            }
+        }
+    },
     "navbar": {
         "user": "Quản lý người dùng",
         "exam": "Quản lý bài kiểm tra",

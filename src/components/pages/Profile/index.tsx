@@ -10,17 +10,18 @@ import {
     FormLabel,
     Heading,
     HStack,
-    IconButton,
     Input,
     Select,
     Text,
     useColorModeValue,
     useToast,
-    VStack,
+    VStack
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FiEdit, FiMail, FiPhone, FiSave, FiUser, FiX } from "react-icons/fi";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import api from "../../../libs/axios";
 import { setUserSlice } from "../../../store/features/user/userSlice";
 import { UserResponseType } from "../../../types/user";
 import MainTemPlate from "../../templates/MainTemPlate";
@@ -28,6 +29,7 @@ import MainTemPlate from "../../templates/MainTemPlate";
 const Profile = () => {
     const user = useAppSelector((state) => state.user);
     const dispatch = useAppDispatch();
+    const { t } = useTranslation()
 
     const setUser = (user: UserResponseType) => {
         dispatch(setUserSlice(user));
@@ -74,17 +76,32 @@ const Profile = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSave = () => {
+    const handleSave = async () => {
         if (validateForm()) {
-            toast({
-                title: "Lưu thành công",
-                description: "Thông tin cá nhân đã được cập nhật",
-                status: "success",
-                duration: 3000,
-                isClosable: true,
-            });
-            setEditMode(false);
+            try {
+                await api.put("/user", {
+                    ...user,
+                    id: user?.id,
+                })
+
+                toast({
+                    title: "Lưu thành công",
+                    description: "Thông tin cá nhân đã được cập nhật",
+                    status: "success",
+                    duration: 3000,
+                    isClosable: true,
+                });
+                setEditMode(false);
+            } catch (error) {
+                console.log(error)
+                toast({
+                    title: "Có lỗi xảy ra"
+                })
+            }
         }
+
+
+
     };
 
     const handleCancel = () => {
@@ -99,7 +116,7 @@ const Profile = () => {
             {user ? <Container maxW="container.md" py={8}>
                 <Flex direction="column" align="center">
                     <Heading size="xl" mb={8}>
-                        Hồ Sơ Cá Nhân
+                        {t("profile.title")}
                     </Heading>
 
                     <Flex
@@ -127,7 +144,7 @@ const Profile = () => {
                                     src={user.image}
                                     mb={2}
                                 />
-                                {editMode && (
+                                {/* {editMode && (
                                     <IconButton
                                         aria-label="Change avatar"
                                         icon={<FiEdit />}
@@ -138,7 +155,7 @@ const Profile = () => {
                                         right={0}
                                         borderRadius="full"
                                     />
-                                )}
+                                )} */}
                             </Box>
                             <Text fontSize="2xl" fontWeight="bold">
                                 {user.name}
@@ -154,7 +171,7 @@ const Profile = () => {
                                     onClick={() => setEditMode(true)}
                                     w="full"
                                 >
-                                    Chỉnh sửa thông tin
+                                    {t("profile.fields.actions.edit")}
                                 </Button>
                             ) : (
                                 <HStack spacing={4} w="full">
@@ -164,7 +181,7 @@ const Profile = () => {
                                         onClick={handleSave}
                                         flex={1}
                                     >
-                                        Lưu
+                                        {t("profile.fields.actions.save")}
                                     </Button>
                                     <Button
                                         leftIcon={<FiX />}
@@ -172,7 +189,7 @@ const Profile = () => {
                                         onClick={handleCancel}
                                         flex={1}
                                     >
-                                        Hủy
+                                        {t("profile.fields.actions.cancel")}
                                     </Button>
                                 </HStack>
                             )}
@@ -189,7 +206,7 @@ const Profile = () => {
                                 <Flex align="center" mb={2}>
                                     <FiUser />
                                     <FormLabel ml={2} mb={0}>
-                                        Họ và tên
+                                        {t("profile.fields.fullName")}
                                     </FormLabel>
                                 </Flex>
                                 {editMode ? (
@@ -220,6 +237,7 @@ const Profile = () => {
                                 {editMode ? (
                                     <>
                                         <Input
+                                            disabled
                                             name="email"
                                             value={user.email}
                                             onChange={handleChange}
@@ -240,7 +258,7 @@ const Profile = () => {
                                 <Flex align="center" mb={2}>
                                     <FiUser />
                                     <FormLabel ml={2} mb={0}>
-                                        Tên đăng nhập
+                                        {t("profile.fields.userName")}
                                     </FormLabel>
                                 </Flex>
                                 {editMode ? (
@@ -260,7 +278,7 @@ const Profile = () => {
                                 <Flex align="center" mb={2}>
                                     <FiPhone />
                                     <FormLabel ml={2} mb={0}>
-                                        Số điện thoại
+                                        {t("profile.fields.phoneNumber")}
                                     </FormLabel>
                                 </Flex>
                                 {editMode ? (
@@ -285,7 +303,7 @@ const Profile = () => {
                                 <Flex align="center" mb={2}>
                                     <FiUser />
                                     <FormLabel ml={2} mb={0}>
-                                        Giới tính
+                                        {t("profile.fields.gender")}
                                     </FormLabel>
                                 </Flex>
                                 {editMode ? (

@@ -14,6 +14,20 @@
             "logout": "Logout"
         }
     },
+    "profile": {
+        "title": "Personal Profile",
+        "fields": {
+            "fullName": "Full Name",
+            "userName": "Username",
+            "phoneNumber": "Phone Number",
+            "gender": "Gender",
+            "actions": {
+                "edit": "Edit Information",
+                "save": "Save",
+                "cancel": "Cancel"
+            }
+        }
+    },
     "navbar": {
         "user": "User Manage",
         "exam": "Exam Manage",
