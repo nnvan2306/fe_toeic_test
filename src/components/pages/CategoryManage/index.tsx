@@ -26,8 +26,10 @@ import toast from "../../../libs/toast";
 import { getAxiosError } from "../../../libs/axios";
 import { useUpdateCategory } from "../../../services/category/update";
 import { useDeleteCategory } from "../../../services/category/delete";
+import { useTranslation } from "react-i18next";
 
 const CategoryManage = () => {
+    const { t } = useTranslation();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isOpenDelete,
@@ -163,7 +165,7 @@ const CategoryManage = () => {
                             setDataUpdate(null);
                         }}
                     >
-                        New
+                        {t("buttons.new")}
                     </Button>
                 </HStack>
 

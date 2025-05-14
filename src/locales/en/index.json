@@ -22,11 +22,31 @@
         "category": "Category Manage",
         "vocabulary": "Vocabulary Manage"
     },
-    "footer": {},
+    "footer": {
+        "title": "Vietnam's leading TOEIC test preparation platform helps you achieve your desired score.",
+        "flash": {
+            "title": "Quick Links",
+            "items": ["Home", "Test", "Review", "Blog", "About Us"]
+        },
+        "service": {
+            "title": "Services",
+            "items": [
+                "Free Account",
+                "Premium Account",
+                "TOEIC Courses",
+                "Study Consultation"
+            ]
+        },
+        "contact": {
+            "title": "Contact",
+            "items": ["Phone: (84) 123 456 789", "Address: Hanoi"]
+        }
+    },
     "noData": "No data found",
     "buttons": {
         "delete": "Delete",
-        "update": "Update"
+        "update": "Update",
+        "new": "New"
     },
     "home": {
         "banner": {
@@ -313,5 +333,9 @@
         "completed": "Completed",
         "noCompleted": "Haven't started yet",
         "button": "Start"
+    },
+    "blog": {
+        "title": "Our Blog",
+        "subTitle": "Discover insights, tutorials, and news about web development"
     }
 }

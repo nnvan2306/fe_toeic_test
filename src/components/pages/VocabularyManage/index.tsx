@@ -30,8 +30,10 @@ import { useUpdateVocabulary } from "../../../services/vocabulary/update";
 import { useDeleteVocabulary } from "../../../services/vocabulary/delete";
 import { useGetCategoris } from "../../../services/category/get-all";
 import { CategoryResponseType } from "../../../types/category";
+import { useTranslation } from "react-i18next";
 
 const VocabularyManage = () => {
+    const { t } = useTranslation();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const {
         isOpen: isOpenDelete,
@@ -206,7 +208,7 @@ const VocabularyManage = () => {
                             setDataUpdate(null);
                         }}
                     >
-                        New
+                        {t("buttons.new")}
                     </Button>
                 </HStack>
 

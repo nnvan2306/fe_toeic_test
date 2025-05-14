@@ -217,7 +217,7 @@ const BlogManager = () => {
                             onOpen();
                         }}
                     >
-                        New
+                        {t("buttons.new")}
                     </Button>
                 </HStack>
                 <TableCommon
