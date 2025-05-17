@@ -141,8 +141,8 @@ const Header = () => {
             </HStack>
 
             <HStack spacing={3}>
-                {
-                    !user ? <>
+                {!user ? (
+                    <>
                         <Button
                             bg={greenColor}
                             w={120}
@@ -165,10 +165,13 @@ const Header = () => {
                             onClick={() => navigate(routesMap.Regsiter)}
                         >
                             {t("headers.buttons.register")}
-                        </Button></> : ""
-                }
-                {
-                    user ? <>
+                        </Button>
+                    </>
+                ) : (
+                    ""
+                )}
+                {user ? (
+                    <>
                         <Popover placement="bottom-end">
                             <PopoverTrigger>
                                 <Button
@@ -183,16 +186,19 @@ const Header = () => {
                                     borderColor={borderColor}
                                 >
                                     <HStack spacing={3}>
-                                        <Avatar
-                                            size="sm"
-                                        />
-                                        <Box display={{ base: "none", md: "block" }}>
+                                        <Avatar size="sm" />
+                                        <Box
+                                            display={{
+                                                base: "none",
+                                                md: "block",
+                                            }}
+                                        >
                                             <Text
                                                 fontWeight="medium"
                                                 fontSize="sm"
                                                 textAlign="left"
                                             >
-                                                {user.username}
+                                                {user.name}
                                             </Text>
                                         </Box>
                                     </HStack>
@@ -216,7 +222,10 @@ const Header = () => {
                                                     src={""}
                                                 />
                                                 <Box>
-                                                    <Text fontWeight="medium" fontSize={"10px"}>
+                                                    <Text
+                                                        fontWeight="medium"
+                                                        fontSize={"10px"}
+                                                    >
                                                         {user.email}
                                                     </Text>
                                                 </Box>
@@ -226,27 +235,42 @@ const Header = () => {
                                         <Button
                                             variant="ghost"
                                             justifyContent="flex-start"
-                                            leftIcon={<Icon as={FiUser} boxSize={4} />}
-                                            py={3}
-                                            borderRadius={0}
-                                            _hover={{ bg: itemHoverBg }}
-                                            onClick={() => navigate(routesMap.Profile)}
-                                        >
-                                            {t("headers.popover.profile")}
-                                        </Button>
-                                        {user.role === "admin" ? <Button
-                                            variant="ghost"
-                                            justifyContent="flex-start"
-                                            leftIcon={<Icon as={FiUser} boxSize={4} />}
+                                            leftIcon={
+                                                <Icon as={FiUser} boxSize={4} />
+                                            }
                                             py={3}
                                             borderRadius={0}
                                             _hover={{ bg: itemHoverBg }}
                                             onClick={() =>
-                                                navigate(routesMap.UserManager)
+                                                navigate(routesMap.Profile)
                                             }
                                         >
-                                            {t("headers.popover.manage")}
-                                        </Button> : ""}
+                                            {t("headers.popover.profile")}
+                                        </Button>
+                                        {user.role === "admin" ? (
+                                            <Button
+                                                variant="ghost"
+                                                justifyContent="flex-start"
+                                                leftIcon={
+                                                    <Icon
+                                                        as={FiUser}
+                                                        boxSize={4}
+                                                    />
+                                                }
+                                                py={3}
+                                                borderRadius={0}
+                                                _hover={{ bg: itemHoverBg }}
+                                                onClick={() =>
+                                                    navigate(
+                                                        routesMap.UserManager
+                                                    )
+                                                }
+                                            >
+                                                {t("headers.popover.manage")}
+                                            </Button>
+                                        ) : (
+                                            ""
+                                        )}
                                         <Button
                                             variant="ghost"
                                             justifyContent="flex-start"
@@ -271,8 +295,11 @@ const Header = () => {
                                     </VStack>
                                 </PopoverBody>
                             </PopoverContent>
-                        </Popover></> : ""
-                }
+                        </Popover>
+                    </>
+                ) : (
+                    ""
+                )}
                 <HStack gap={0}>
                     <Button
                         variant="outline"

@@ -15,7 +15,7 @@ import {
     Text,
     useColorModeValue,
     useToast,
-    VStack
+    VStack,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -32,7 +32,7 @@ import MainTemPlate from "../../templates/MainTemPlate";
 const Profile = () => {
     const user = useAppSelector((state) => state.user);
     const dispatch = useAppDispatch();
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
     const setUser = (user: UserResponseType) => {
         dispatch(setUserSlice(user));
@@ -98,7 +98,7 @@ const Profile = () => {
                 await api.put("/user", {
                     ...user,
                     id: user?.id,
-                })
+                });
 
                 toast({
                     title: "Lưu thành công",
@@ -109,15 +109,12 @@ const Profile = () => {
                 });
                 setEditMode(false);
             } catch (error) {
-                console.log(error)
+                console.log(error);
                 toast({
-                    title: "Có lỗi xảy ra"
-                })
+                    title: "Có lỗi xảy ra",
+                });
             }
         }
-
-
-
     };
 
     const handleCancel = () => {
@@ -179,7 +176,7 @@ const Profile = () => {
                                         {user.name}
                                     </Text>
                                     <Text color="gray.500" mb={4}>
-                                        @{user.username}
+                                        @{user.name}
                                     </Text>
 
                                     {!editMode ? (
@@ -199,7 +196,9 @@ const Profile = () => {
                                                 onClick={handleSave}
                                                 flex={1}
                                             >
-                                                {t("profile.fields.actions.save")}
+                                                {t(
+                                                    "profile.fields.actions.save"
+                                                )}
                                             </Button>
                                             <Button
                                                 leftIcon={<FiX />}
@@ -207,7 +206,9 @@ const Profile = () => {
                                                 onClick={handleCancel}
                                                 flex={1}
                                             >
-                                                {t("profile.fields.actions.cancel")}
+                                                {t(
+                                                    "profile.fields.actions.cancel"
+                                                )}
                                             </Button>
                                         </HStack>
                                     )}
@@ -275,7 +276,9 @@ const Profile = () => {
                                         <Flex align="center" mb={2}>
                                             <FiPhone />
                                             <FormLabel ml={2} mb={0}>
-                                                {t("profile.fields.phoneNumber")}
+                                                {t(
+                                                    "profile.fields.phoneNumber"
+                                                )}
                                             </FormLabel>
                                         </Flex>
                                         {editMode ? (
@@ -322,8 +325,8 @@ const Profile = () => {
                                                 {user.gender === "male"
                                                     ? "Nam"
                                                     : user.gender === "female"
-                                                        ? "Nữ"
-                                                        : "Khác"}
+                                                    ? "Nữ"
+                                                    : "Khác"}
                                             </Text>
                                         )}
                                     </FormControl>

@@ -123,7 +123,7 @@ const UserManager = () => {
                 <TitleManage title={t("userManage.title")} />
                 <TableCommon
                     columns={[
-                        { key: "username", label: "Username", w: "20%" },
+                        { key: "name", label: "Name", w: "20%" },
                         { key: "email", label: "Email", w: "20%" },
                         { key: "phone", label: "Phone", w: "20%" },
                         {
@@ -149,11 +149,11 @@ const UserManager = () => {
                             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
                                 <FormCommon title="Name">
                                     <Input
-                                        value={dataUpdate?.username}
+                                        value={dataUpdate?.name}
                                         onChange={(e) =>
                                             setDataUpdate((prev) => ({
                                                 ...prev,
-                                                username: e.target.value || "",
+                                                name: e.target.value || "",
                                             }))
                                         }
                                     />
