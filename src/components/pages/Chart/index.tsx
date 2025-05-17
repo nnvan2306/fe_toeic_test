@@ -25,7 +25,7 @@ const Chart = () => {
             const countMap: Record<string, number> = {};
 
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            (historyData.data || []).forEach((his: { examId: any }) => {
+            (historyData?.data || []).forEach((his: { examId: any }) => {
                 const examId = his.examId;
                 if (examId) {
                     countMap[examId] = (countMap[examId] || 0) + 1;

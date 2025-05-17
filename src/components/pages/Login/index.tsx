@@ -58,6 +58,7 @@ const Login = () => {
                     status: "error",
                     title: getAxiosError(error),
                 });
+                setIsLoading(false);
             },
         },
     });
