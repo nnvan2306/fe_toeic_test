@@ -2,6 +2,8 @@ import {
     Avatar,
     Box,
     Button,
+    Card,
+    CardBody,
     Container,
     Divider,
     Flex,
@@ -10,10 +12,23 @@ import {
     FormLabel,
     Heading,
     HStack,
+    Image,
     Input,
+    List,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Radio,
+    RadioGroup,
     Select,
+    Stack,
     Text,
     useColorModeValue,
+    useDisclosure,
     useToast,
     VStack,
 } from "@chakra-ui/react";
@@ -26,8 +41,193 @@ import api from "../../../libs/axios";
 import { useGetHistories } from "../../../services/history/get-by-user";
 import { setUserSlice } from "../../../store/features/user/userSlice";
 import { UserResponseType } from "../../../types/user";
-import TableCommon from "../../organisms/TableCommon";
 import MainTemPlate from "../../templates/MainTemPlate";
+import { QuestionType } from "../ExamNew";
+
+interface Exam {
+    id?: number;
+    title: string;
+    score: number;
+    date: string;
+    created_at?: string;
+    Exam?: { title: string };
+    questions: string;
+}
+
+const ExamModal = ({ isOpen, onClose, exam, t }: { isOpen: boolean; onClose: () => void; exam: Exam; t: (key: string) => string }) => {
+    const questions: QuestionType[] = JSON.parse(exam.questions);
+
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} size={{ base: "full", md: "4xl" }} isCentered>
+            <ModalOverlay bg="blackAlpha.600" />
+            <ModalContent borderRadius="xl" boxShadow="2xl" bg="white" m={{ base: 2, md: 4 }}>
+                <ModalHeader fontSize="2xl" fontWeight="bold" color="gray.800" textAlign="center" py={4}>
+                    {exam.title}
+                </ModalHeader>
+                <ModalCloseButton size="lg" color="gray.600" _hover={{ color: "gray.800" }} />
+                <ModalBody maxH={{ base: "80vh", md: "70vh" }} overflowY="auto" px={{ base: 4, md: 6 }} py={6}>
+                    <Box bg="gray.50" p={4} borderRadius="md" mb={6}>
+                        <Text fontSize="lg" color="gray.700" fontWeight="semibold" mb={2}>
+                            {t("Score")}: {exam.score}
+                        </Text>
+                        <Text fontSize="lg" color="gray.700" fontWeight="semibold">
+                            {t("Score")}: {exam.date}
+                        </Text>
+                    </Box>
+                    <Box maxW={{ base: "100%", md: "80%" }} mx="auto">
+                        {questions?.length ? questions.map((item: QuestionType, index: number) => {
+                            const isCorrect = item.answers.find((a) => a.isChoose)?.isCorect;
+                            return (
+                                <Card
+                                    key={item.uuid}
+                                    variant="outline"
+                                    borderWidth="2px"
+                                    borderColor={isCorrect ? "green.400" : "red.400"}
+                                    bg={isCorrect ? "green.50" : "red.50"}
+                                    borderRadius="lg"
+                                    p={4}
+                                    mb={4}
+                                    boxShadow="md"
+                                    _hover={{ boxShadow: "lg" }}
+                                >
+                                    <CardBody>
+                                        <Text
+                                            fontSize="md"
+                                            fontWeight="bold"
+                                            color={isCorrect ? "green.700" : "red.700"}
+                                            mb={3}
+                                            textAlign="center"
+                                        >
+                                            {isCorrect ? t("Correct") : t("Incorrect")}
+                                        </Text>
+                                        <Text fontSize="lg" fontWeight="semibold" mb={4}>
+                                            {index + 1}. {item.title}
+                                        </Text>
+                                        {item.audio && (
+                                            <Box bg="gray.100" p={3} borderRadius="md" mb={4} textAlign="center">
+                                                <audio controls style={{ width: "100%", maxWidth: "400px" }}>
+                                                    <source src={item.audio} type="audio/ogg" />
+                                                    <source src={item.audio} type="audio/mpeg" />
+                                                </audio>
+                                            </Box>
+                                        )}
+                                        {item.image && (
+                                            <Box bg="gray.100" p={3} borderRadius="md" mb={4} textAlign="center">
+                                                <Image
+                                                    src={item.image}
+                                                    alt={item.title}
+                                                    maxH="200px"
+                                                    objectFit="contain"
+                                                    mx="auto"
+                                                    borderRadius="md"
+                                                />
+                                            </Box>
+                                        )}
+                                        <RadioGroup
+                                            value={item.answers.find((a) => a.isChoose)?.uuid || ""}
+                                            colorScheme={isCorrect ? "green" : "red"}
+                                        >
+                                            <Stack spacing={3}>
+                                                {item.answers.map((option) => (
+                                                    <Radio
+                                                        key={option.uuid}
+                                                        value={option.uuid}
+                                                        isDisabled
+                                                        colorScheme={option.isCorect ? "green" : "red"}
+                                                    >
+                                                        <Text
+                                                            color={option.isCorect ? "green.600" : "gray.600"}
+                                                            fontWeight={option.isCorect ? "bold" : "normal"}
+                                                        >
+                                                            {option.content}
+                                                            {option.isCorect && " (Correct)"}
+                                                        </Text>
+                                                    </Radio>
+                                                ))}
+                                            </Stack>
+                                        </RadioGroup>
+                                    </CardBody>
+                                </Card>
+                            );
+                        }) : (
+                            <Text textAlign="center" color="gray.500">
+                                {t("No questions available")}
+                            </Text>
+                        )}
+                    </Box>
+                </ModalBody>
+                <ModalFooter>
+                    <Button
+                        colorScheme="blue"
+                        onClick={onClose}
+                        size="lg"
+                        px={6}
+                        borderRadius="md"
+                        _hover={{ bg: "blue.600" }}
+                    >
+                        {t("Close")}
+                    </Button>
+                </ModalFooter>
+            </ModalContent>
+        </Modal>
+    );
+};
+const ExamList = ({ exams, t }: { exams: Exam[]; t: (key: string) => string }) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
+
+    const handleOpenModal = (exam: Exam) => {
+        setSelectedExam(exam);
+        onOpen();
+    };
+
+    return (
+        <>
+            <List
+                styleType="none"
+                p={0}
+                m={0}
+                display="flex"
+                flexDirection="column"
+                gap={4}
+                cursor="pointer"
+            >
+                {exams.length > 0 ? exams.map((exam, index) => (
+                    <Box
+                        as="li"
+                        key={index}
+                        bg="gray.50"
+                        p={4}
+                        borderRadius="md"
+                        boxShadow="0 2px 4px rgba(0,0,0,0.1)"
+                        transition="transform 0.2s ease-in-out"
+                        _hover={{ transform: "translateY(-2px)" }}
+                        onClick={() => handleOpenModal(exam)}
+                    >
+                        <Text fontWeight="bold" fontSize="lg" color="gray.800" mb={2}>
+                            {exam.title}
+                        </Text>
+                        <Text fontSize="md" color="gray.600" my={1}>
+                            {t("Point")}: {exam.score}
+                        </Text>
+                        <Text fontSize="md" color="gray.600" my={1}>
+                            {t("Date")}: {exam.date}
+                        </Text>
+
+                    </Box>
+                )) : null}
+            </List>
+            {selectedExam && (
+                <ExamModal
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    exam={selectedExam}
+                    t={t}
+                />
+            )}
+        </>
+    );
+};
 
 const Profile = () => {
     const user = useAppSelector((state) => state.user);
@@ -57,7 +257,6 @@ const Profile = () => {
             })),
         [data]
     );
-    console.log(data);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -159,18 +358,6 @@ const Profile = () => {
                                             src={user.image}
                                             mb={2}
                                         />
-                                        {/* {editMode && (
-                                            <IconButton
-                                                aria-label="Change avatar"
-                                                icon={<FiEdit />}
-                                                size="sm"
-                                                colorScheme="blue"
-                                                position="absolute"
-                                                bottom={0}
-                                                right={0}
-                                                borderRadius="full"
-                                            />
-                                        )} */}
                                     </Box>
                                     <Text fontSize="2xl" fontWeight="bold">
                                         {user.name}
@@ -325,8 +512,8 @@ const Profile = () => {
                                                 {user.gender === "male"
                                                     ? "Nam"
                                                     : user.gender === "female"
-                                                    ? "Nữ"
-                                                    : "Khác"}
+                                                        ? "Nữ"
+                                                        : "Khác"}
                                             </Text>
                                         )}
                                     </FormControl>
@@ -335,14 +522,7 @@ const Profile = () => {
                         </Flex>
                     </Container>
                     <Box w="80%">
-                        <TableCommon
-                            columns={[
-                                { key: "title", label: "Title" },
-                                { key: "score", label: "Score" },
-                                { key: "date", label: "Date" },
-                            ]}
-                            data={exams}
-                        />
+                        <ExamList exams={exams} t={t} />
                     </Box>
                 </VStack>
             ) : (

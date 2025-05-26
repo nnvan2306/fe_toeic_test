@@ -1,32 +1,33 @@
-import React, { useState, useEffect, useMemo } from "react";
 import {
+    Badge,
     Box,
-    Container,
-    Heading,
-    Text,
     Button,
-    VStack,
+    Card,
+    CardHeader,
+    Container,
+    Divider,
+    Flex,
+    Heading,
+    Image,
+    Progress,
     Radio,
     RadioGroup,
     Stack,
-    Badge,
-    Card,
-    CardHeader,
-    Flex,
-    Image,
-    Progress,
+    Text,
+    VStack,
 } from "@chakra-ui/react";
-import { FaCheck, FaClock, FaHeadphones, FaGlobe } from "react-icons/fa";
-import MainTemPlate from "../../templates/MainTemPlate";
-import { useGetExam } from "../../../services/exam/get-exam";
+import React, { useEffect, useMemo, useState } from "react";
+import { FaBook, FaCheck, FaClock, FaGlobe, FaHeadphones } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
-import { QuestionType } from "../ExamNew";
-import { useCreateHistory } from "../../../services/history/create";
 import { useAppSelector } from "../../../app/hooks";
+import useBlocker from "../../../hooks/useBlocker";
 import { getAxiosError } from "../../../libs/axios";
 import toast from "../../../libs/toast";
 import { routesMap } from "../../../routes/routes";
-import useBlocker from "../../../hooks/useBlocker";
+import { useGetExam } from "../../../services/exam/get-exam";
+import { useCreateHistory } from "../../../services/history/create";
+import MainTemPlate from "../../templates/MainTemPlate";
+import { QuestionType } from "../ExamNew";
 
 const ExamDetail: React.FC = () => {
     const { id } = useParams();
@@ -41,6 +42,7 @@ const ExamDetail: React.FC = () => {
     const { data } = useGetExam({
         id: Number(id) || 0,
     });
+
     const questionBuild = useMemo(() => {
         const raw = data?.data?.questions;
         if (!raw) return [];
@@ -52,6 +54,13 @@ const ExamDetail: React.FC = () => {
         }
     }, [data]);
 
+    // Split questions into audio and non-audio
+    const { audioQuestions, readingQuestions } = useMemo(() => {
+        const audioQuestions = questionBuild.filter((q) => q.audio);
+        const readingQuestions = questionBuild.filter((q) => !q.audio);
+        return { audioQuestions, readingQuestions };
+    }, [questionBuild]);
+
     const formatTime = (seconds: number): string => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
@@ -60,21 +69,29 @@ const ExamDetail: React.FC = () => {
             .padStart(2, "0")}`;
     };
 
-    const handleSelectAnswer = (questionIndex: number, answerUuid: string) => {
-        const updated = questions.map((q, i) => {
-            if (i !== questionIndex) return q;
-            return {
-                ...q,
-                answers: q.answers.map((ans) => ({
+    const handleSelectAnswer = (questionUuid: string, answerUuid: string) => {
+        const questionIndex = questions.findIndex((q) => q.uuid === questionUuid);
+        if (questionIndex === -1) {
+            console.error(`Question with UUID ${questionUuid} not found`);
+            return;
+        }
+
+        const updated = questions.map((q) => {
+            if (q.uuid === questionUuid) {
+                q.answers = q.answers.map((ans) => ({
                     ...ans,
                     isChoose: ans.uuid === answerUuid,
-                })),
+                }))
             };
+
+            return q
         });
+
         if (!questions[questionIndex].answers.find((item) => item.isChoose)) {
             setCount(count + 1);
         }
-        setQuestions(updated);
+
+        setQuestions([...updated]);
     };
 
     const { mutate: createHistory, isPending } = useCreateHistory({
@@ -96,6 +113,7 @@ const ExamDetail: React.FC = () => {
             },
         },
     });
+
     const handleSubmit = () => {
         if (id && user?.id) {
             createHistory({
@@ -150,8 +168,8 @@ const ExamDetail: React.FC = () => {
                                         timeLeft < 300
                                             ? "red"
                                             : timeLeft < 600
-                                            ? "yellow"
-                                            : "green"
+                                                ? "yellow"
+                                                : "green"
                                     }
                                     fontSize="xl"
                                     p={2}
@@ -167,7 +185,7 @@ const ExamDetail: React.FC = () => {
 
                         <Box p={4}>
                             <Progress
-                                value={(count / questions.length) * 100}
+                                value={(count / questions.length) * 100 || 0}
                                 colorScheme="blue"
                                 size="sm"
                                 borderRadius="md"
@@ -178,111 +196,174 @@ const ExamDetail: React.FC = () => {
                                     Overall Progress
                                 </Text>
                                 <Text>
-                                    {Math.round(
-                                        (count / questions.length) * 100
-                                    )}
+                                    {questions.length
+                                        ? Math.round((count / questions.length) * 100)
+                                        : 0}
                                     %
                                 </Text>
                             </Flex>
                         </Box>
-                        <VStack w="100%" px={4} gap={4}>
-                            {questions?.length
-                                ? questions.map(
-                                      (item: QuestionType, index: number) => {
-                                          return (
-                                              <Card
-                                                  key={item.uuid}
-                                                  variant="outline"
-                                                  p={4}
-                                                  w="100%"
-                                              >
-                                                  <Text
-                                                      fontWeight="bold"
-                                                      mb={3}
-                                                  >
-                                                      {index + 1}. {item.title}
-                                                  </Text>
-                                                  {item.audio ? (
-                                                      <Box
-                                                          bg="gray.100"
-                                                          p={3}
-                                                          borderRadius="md"
-                                                          textAlign="center"
-                                                          mb={2}
-                                                      >
-                                                          <audio
-                                                              controls
-                                                              style={{
-                                                                  width: "100%",
-                                                              }}
-                                                          >
-                                                              <source
-                                                                  src={
-                                                                      item.audio
-                                                                  }
-                                                                  type="audio/ogg"
-                                                              />
-                                                              <source
-                                                                  src={
-                                                                      item.audio
-                                                                  }
-                                                                  type="audio/mpeg"
-                                                              />
-                                                          </audio>
-                                                      </Box>
-                                                  ) : null}
-                                                  {item.image ? (
-                                                      <Box
-                                                          bg="gray.100"
-                                                          p={3}
-                                                          borderRadius="md"
-                                                          textAlign="center"
-                                                          mb={2}
-                                                      >
-                                                          <Image
-                                                              alt="image"
-                                                              src={item.image}
-                                                          />
-                                                      </Box>
-                                                  ) : null}
-                                                  <RadioGroup
-                                                      onChange={(val) =>
-                                                          handleSelectAnswer(
-                                                              index,
-                                                              val
-                                                          )
-                                                      }
-                                                      value={
-                                                          item.answers.find(
-                                                              (a) => a.isChoose
-                                                          )?.uuid || ""
-                                                      }
-                                                      colorScheme="blue"
-                                                  >
-                                                      <Stack spacing={3}>
-                                                          {item.answers.map(
-                                                              (option) => (
-                                                                  <Radio
-                                                                      key={
-                                                                          option.uuid
-                                                                      }
-                                                                      value={
-                                                                          option.uuid
-                                                                      }
-                                                                  >
-                                                                      {
-                                                                          option.content
-                                                                      }
-                                                                  </Radio>
-                                                              )
-                                                          )}
-                                                      </Stack>
-                                                  </RadioGroup>
-                                              </Card>
-                                          );
-                                      }
-                                  )
-                                : null}
+
+                        <VStack w="100%" px={4} gap={6} align="stretch">
+                            {/* Listening Section */}
+                            {audioQuestions.length > 0 && (
+                                <Box>
+                                    <Flex align="center" mb={4}>
+                                        <FaHeadphones size={24} color="#3182CE" style={{ marginRight: "12px" }} />
+                                        <Heading size="md" color="gray.800">
+                                            Listening Section
+                                        </Heading>
+                                    </Flex>
+                                    <VStack gap={4}>
+                                        {audioQuestions.map((item: QuestionType, index: number) => (
+                                            <Card
+                                                key={item.uuid}
+                                                variant="outline"
+                                                p={4}
+                                                w="100%"
+                                                borderColor="blue.200"
+                                                bg="blue.50"
+                                                borderRadius="lg"
+                                                boxShadow="sm"
+                                            >
+                                                <Text fontWeight="bold" fontSize="lg" mb={3} color="blue.700">
+                                                    {index + 1}. {item.title}
+                                                </Text>
+                                                {item.audio && (
+                                                    <Box
+                                                        bg="gray.100"
+                                                        p={3}
+                                                        borderRadius="md"
+                                                        textAlign="center"
+                                                        mb={4}
+                                                    >
+                                                        <audio
+                                                            controls
+                                                            style={{
+                                                                width: "100%",
+                                                                maxWidth: "400px",
+                                                            }}
+                                                        >
+                                                            <source src={item.audio} type="audio/ogg" />
+                                                            <source src={item.audio} type="audio/mpeg" />
+                                                        </audio>
+                                                    </Box>
+                                                )}
+                                                {item.image && (
+                                                    <Box
+                                                        bg="gray.100"
+                                                        p={3}
+                                                        borderRadius="md"
+                                                        textAlign="center"
+                                                        mb={4}
+                                                    >
+                                                        <Image
+                                                            alt={item.title}
+                                                            src={item.image}
+                                                            maxH="200px"
+                                                            objectFit="contain"
+                                                            borderRadius="md"
+                                                        />
+                                                    </Box>
+                                                )}
+                                                <RadioGroup
+                                                    onChange={(val) => handleSelectAnswer(item.uuid, val)}
+                                                    value={item.answers.find((a) => a.isChoose)?.uuid || ""}
+                                                    colorScheme="blue"
+                                                >
+                                                    <Stack spacing={3}>
+                                                        {item.answers.map((option) => (
+                                                            <Radio
+                                                                key={option.uuid}
+                                                                value={option.uuid}
+                                                                isDisabled={isFinished || timeLeft <= 0}
+                                                            >
+                                                                {option.content}
+                                                            </Radio>
+                                                        ))}
+                                                    </Stack>
+                                                </RadioGroup>
+                                            </Card>
+                                        ))}
+                                    </VStack>
+                                </Box>
+                            )}
+
+                            {/* Divider between sections */}
+                            {(audioQuestions.length > 0 && readingQuestions.length > 0) && (
+                                <Divider my={6} borderColor="gray.300" />
+                            )}
+
+                            {/* Reading Section */}
+                            {readingQuestions.length > 0 && (
+                                <Box>
+                                    <Flex align="center" mb={4}>
+                                        <FaBook size={24} color="#3182CE" style={{ marginRight: "12px" }} />
+                                        <Heading size="md" color="gray.800">
+                                            Reading Section
+                                        </Heading>
+                                    </Flex>
+                                    <VStack gap={4}>
+                                        {readingQuestions.map((item: QuestionType, index: number) => (
+                                            <Card
+                                                key={item.uuid}
+                                                variant="outline"
+                                                p={4}
+                                                w="100%"
+                                                borderColor="gray.200"
+                                                bg="white"
+                                                borderRadius="lg"
+                                                boxShadow="sm"
+                                            >
+                                                <Text fontWeight="bold" fontSize="lg" mb={3} color="gray.800">
+                                                    {index + 1 + audioQuestions.length}. {item.title}
+                                                </Text>
+                                                {item.image && (
+                                                    <Box
+                                                        bg="gray.100"
+                                                        p={3}
+                                                        borderRadius="md"
+                                                        textAlign="center"
+                                                        mb={4}
+                                                    >
+                                                        <Image
+                                                            alt={item.title}
+                                                            src={item.image}
+                                                            maxH="200px"
+                                                            objectFit="contain"
+                                                            borderRadius="md"
+                                                        />
+                                                    </Box>
+                                                )}
+                                                <RadioGroup
+                                                    onChange={(val) => handleSelectAnswer(item.uuid, val)}
+                                                    value={item.answers.find((a) => a.isChoose)?.uuid || ""}
+                                                    colorScheme="blue"
+                                                >
+                                                    <Stack spacing={3}>
+                                                        {item.answers.map((option) => (
+                                                            <Radio
+                                                                key={option.uuid}
+                                                                value={option.uuid}
+                                                                isDisabled={isFinished || timeLeft <= 0}
+                                                            >
+                                                                {option.content}
+                                                            </Radio>
+                                                        ))}
+                                                    </Stack>
+                                                </RadioGroup>
+                                            </Card>
+                                        ))}
+                                    </VStack>
+                                </Box>
+                            )}
+
+                            {/* Empty State */}
+                            {questions.length === 0 && (
+                                <Text textAlign="center" color="gray.500" py={4}>
+                                    No questions available
+                                </Text>
+                            )}
                         </VStack>
 
                         <Box p={4} borderTop="1px solid" borderColor="gray.200">
@@ -292,7 +373,7 @@ const ExamDetail: React.FC = () => {
                                 size="lg"
                                 width="100%"
                                 leftIcon={<FaCheck />}
-                                disabled={isPending}
+                                disabled={isPending || isFinished || timeLeft <= 0}
                             >
                                 Submit Test
                             </Button>

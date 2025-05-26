@@ -1,21 +1,21 @@
 import {
     Box,
+    Card,
+    CardBody,
+    CardHeader,
     Flex,
     Heading,
-    Stat,
-    StatLabel,
-    StatNumber,
-    StatHelpText,
     // Badge,
     SimpleGrid,
-    Card,
-    CardHeader,
-    CardBody,
+    Stat,
+    StatHelpText,
+    StatLabel,
+    StatNumber,
 } from "@chakra-ui/react";
-import MainTemPlate from "../../templates/MainTemPlate";
+import { useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useGetHistory } from "../../../services/history/get-history";
-import { useMemo } from "react";
+import MainTemPlate from "../../templates/MainTemPlate";
 
 const Result = () => {
     const { id } = useParams();
@@ -84,7 +84,7 @@ const Result = () => {
                             <Stat>
                                 <StatLabel>Date Completed</StatLabel>
                                 <StatNumber>
-                                    {data?.data?.created_at.split("T")[0]}
+                                    {data?.data?.created_at?.split("T")[0]}
                                 </StatNumber>
                             </Stat>
                         </SimpleGrid>

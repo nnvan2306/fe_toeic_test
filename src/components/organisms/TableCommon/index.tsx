@@ -44,6 +44,13 @@ const TableCommon = ({
 
     const { t } = useTranslation();
 
+    console.log(
+        "check data: ",
+        typeof data[0]?.questions === "string"
+            ? JSON.parse(data[0].questions)
+            : []
+    );
+
     return (
         <Box
             w="100%"
